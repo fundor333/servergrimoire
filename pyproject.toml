@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "sslverify"
+version = "0.1.0"
+description = "Package for check SSL certificate and other things for check servers"
+authors = ["Fundor333 <fundor333@fundor333.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pyOpenssl = "^19.1.0"
+tabulate = "^0.8.7"
+emoji = "^0.6.0"
+requests = "^2.24.0"
+
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.6"
+black = { version = "19.10b0", allow-prereleases = true, python = "^3.8", markers = "platform_python_implementation == 'CPython'" }
+
