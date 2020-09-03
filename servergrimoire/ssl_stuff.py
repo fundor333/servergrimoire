@@ -4,7 +4,7 @@ import socket
 import ssl
 from typing import Iterable
 
-from sslverify import print_stuff
+from servergrimoire import print_stuff
 
 logger = logging.getLogger("SSLVerify")
 pc = print_stuff.PrintColor()
@@ -14,7 +14,7 @@ def ssl_valid_time_remaining(hostname: str) -> datetime.datetime:
     ssl_date_fmt = r"%b %d %H:%M:%S %Y %Z"
 
     context = ssl.create_default_context()
-    conn = context.wrap_socket(socket.socket(socket.AF_INET), server_hostname=hostname, )
+    conn = context.wrap_socket(socket.socket(socket.AF_INET), server_hostname=hostname,)
     conn.settimeout(3.0)
 
     logger.debug("Connect to {}".format(hostname))
@@ -43,7 +43,7 @@ def ssh_status(hostname: str, buffer_days: int = 30) -> (bool, str, datetime.dat
         output_strng = False, hostname, None
     else:
         if will_expire_in < limit:
-            output_strng =False, hostname, will_expire_in
+            output_strng = False, hostname, will_expire_in
         elif will_expire_in < limit:
             output_strng = None, hostname, will_expire_in
         else:
