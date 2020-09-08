@@ -7,17 +7,22 @@ class Plugin(object):
     """
 
     def __init__(self, context):
-        self._log = PrintColor()
+        self.l = PrintColor()
 
-    def can_handle(self, directive):
+    def can_handle(self, directive: str) -> bool:
         """
         Returns true if the Plugin can handle the directive.
         """
         raise NotImplementedError
 
-    def handle(self, directive, data):
+    def execute(self, directive: str, data: dict) -> dict:
         """
         Executes the directive.
-        Returns true if the Plugin successfully handled the directive.
+        """
+        raise NotImplementedError
+
+    def stats(self, directive: str, data: dict) -> {str: int}:
+        """
+        Return the stats for the directive
         """
         raise NotImplementedError
