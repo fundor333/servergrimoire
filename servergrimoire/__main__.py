@@ -1,4 +1,5 @@
 from servergrimoire.dispatcher import grimoire
+from . import grimoire
 
-if __name__ =="__main__":
+if __name__ == "__main__":
     grimoire()
