@@ -1,6 +1,6 @@
 from importlib import import_module
+
 import click
-from .configmanager import ConfigManager
 
 
 def dynamic_import(abs_module_path, class_name):
@@ -10,20 +10,28 @@ def dynamic_import(abs_module_path, class_name):
 
 
 @click.group()
-@click.pass_context
-@click.option('--c', help="Path of the config if different from standard",default="~\.servergrimoire_config")
+@click.option('--c', "-config", help="Path of the config if different from standard",
+              default="~\.servergrimoire_config")
 def grimoire(c):
-    hello()
-    print("")
-    print("For help use --help")
-    ConfigManager(c)
+    click.echo(c)
 
 
-@grimoire.command()
-@click.pass_context
-def sync(ctx):
-    click.echo('Debug is %s' % (ctx.obj['DEBUG'] and 'on' or 'off'))
+@grimoire.command(help="Run the plugin")
+@click.option('--c', "-command", help="Command to run. If not insert launch all the commands")
+@click.option('--u', "-url", help="On which url launch the command")
+def run(c, u):
+    click.echo(c)
+    click.echo(u)
 
+
+@grimoire.command(help="Show the stats")
+@click.option('--c', "-command", help="Stats to return. If not insert launch all the commands")
+@click.option('--u', "-url", help="On which url return the stats")
+def stats(c, u):
+    click.echo(c)
+    click.echo(u)
+
+@grimoire.command(help="Show the hello message")
 def hello():
     print("""
 .d8888b.                                                         
