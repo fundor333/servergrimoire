@@ -1,24 +1,28 @@
 from importlib import import_module
-
 import click
+from .configmanager import ConfigManager
 
 
 def dynamic_import(abs_module_path, class_name):
     module_object = import_module(abs_module_path)
-
     target_class = getattr(module_object, class_name)
-
     return target_class
 
 
-@click.command()
-@click.option('--count', is_flag=True, help='Number of greetings.')
-@click.option('--name', is_flag=True, help='The person to greet.')
-def grimoire(count, name):
+@click.group()
+@click.pass_context
+@click.option('--c', help="Path of the config if different from standard",default="~\.servergrimoire_config")
+def grimoire(c):
     hello()
     print("")
     print("For help use --help")
+    ConfigManager(c)
 
+
+@grimoire.command()
+@click.pass_context
+def sync(ctx):
+    click.echo('Debug is %s' % (ctx.obj['DEBUG'] and 'on' or 'off'))
 
 def hello():
     print("""

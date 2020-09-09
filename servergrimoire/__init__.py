@@ -2,3 +2,4 @@
 
 from .dispatcher import *
 from .operation import *
+from .configmanager import *
