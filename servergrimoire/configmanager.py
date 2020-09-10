@@ -15,6 +15,7 @@ class ConfigManager:
     def create_default(self) -> dict:
         with open(self.path, 'w') as outfile:
             json.dump(self.config, outfile)
+        return self.config
 
     @property
     def data_path(self):

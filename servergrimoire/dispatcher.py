@@ -2,6 +2,8 @@ from importlib import import_module
 
 import click
 
+from servergrimoire.app import GrimoirePage
+
 
 def dynamic_import(abs_module_path, class_name):
     module_object = import_module(abs_module_path)
@@ -12,24 +14,48 @@ def dynamic_import(abs_module_path, class_name):
 @click.group()
 @click.option('--c', "-config", help="Path of the config if different from standard",
               default="~\.servergrimoire_config")
-def grimoire(c):
-    click.echo(c)
+@click.pass_context
+def grimoire(ctx, c):
+    ctx.obj = GrimoirePage(c)
 
 
-@grimoire.command(help="Run the plugin")
+@grimoire.command(help="Run the command")
 @click.option('--c', "-command", help="Command to run. If not insert launch all the commands")
 @click.option('--u', "-url", help="On which url launch the command")
-def run(c, u):
-    click.echo(c)
-    click.echo(u)
+@click.pass_context
+def run(ctx, c, u):
+    ctx.obj.run(c, u)
 
 
 @grimoire.command(help="Show the stats")
 @click.option('--c', "-command", help="Stats to return. If not insert launch all the commands")
 @click.option('--u', "-url", help="On which url return the stats")
-def stats(c, u):
+@click.pass_context
+def stats(ctx, c, u):
     click.echo(c)
     click.echo(u)
+    ctx.obj.stats(c, u)
+
+
+@grimoire.command(help="Add the url to the command check")
+@click.option('--c', "-command", help="Command to be add")
+@click.option('--u', "-url", help="Url to add")
+@click.pass_context
+def add(ctx, c, u):
+    click.echo(c)
+    click.echo(u)
+    ctx.obj.add(c, u)
+
+
+@grimoire.command(help="Remove the url to the command check")
+@click.option('--c', "-command", help="Command to be removed")
+@click.option('--u', "-url", help="Url to remove")
+@click.pass_context
+def remove(ctx, c, u):
+    click.echo(c)
+    click.echo(u)
+    ctx.obj.remove(c, u)
+
 
 @grimoire.command(help="Show the hello message")
 def hello():
