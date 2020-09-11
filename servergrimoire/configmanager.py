@@ -1,19 +1,24 @@
 import json
-import pathlib
+import os
+from pathlib import Path
 
 
 class ConfigManager:
     def __init__(self, path):
+        self.config={}
+        if path is None:
+            path = Path.home() / ".servergrimoire_config"
         self.path = path
-        file = pathlib.Path(path)
-        if file.exists():
+
+        if not os.path.exists(path):
+            self.create_default()
+        else:
             with open(path) as data_file:
                 self.config = json.load(data_file)
-        else:
-            self.config = self.create_default()
 
     def create_default(self) -> dict:
-        with open(self.path, 'w') as outfile:
+        with open(Path(self.path), 'w') as outfile:
+            self.config["data_path"] = str(Path.home() / ".servergrimoire_data")
             json.dump(self.config, outfile)
         return self.config
 
@@ -28,5 +33,5 @@ class ConfigManager:
     @data_path.getter
     def data_path(self):
         if self.config.get("data_path", None) is None:
-            self.config["data_path"] = "~/.servergrimoire_data"
+            self.config["data_path"] = Path.home() / ".servergrimoire_data"
         return self.config["data_path"]

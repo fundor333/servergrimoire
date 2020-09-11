@@ -6,6 +6,10 @@ class DNSLookup(Plugin):
     def can_handle(self, directive: str) -> bool:
         return directive == "dns_lookup"
 
+    @staticmethod
+    def get_directives() -> [str]:
+        return ['dns_lookup']
+
     def execute(self, directive: str, data: dict) -> dict:
         domain = data["url"]
         array_input = [

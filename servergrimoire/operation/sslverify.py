@@ -10,6 +10,10 @@ class SSLVerify(Plugin):
     def can_handle(self, directive: str) -> bool:
         return directive == "ssl_check"
 
+    @staticmethod
+    def get_directives() -> [str]:
+        return ["ssl_check"]
+
     def __ssl_valid_time_remaining(self, hostname: str) -> datetime.datetime:
         ssl_date_fmt = r"%b %d %H:%M:%S %Y %Z"
 

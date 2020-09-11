@@ -7,6 +7,10 @@ class DNSChecker(Plugin):
     def can_handle(self, directive: str) -> bool:
         return directive == "dns_checker"
 
+    @staticmethod
+    def get_directives() -> [str]:
+        return ["dns_checker"]
+
     def execute(self, directive: str, data: dict) -> dict:
         w = whois.whois(data["url"])
         if w["domain_name"] is None:

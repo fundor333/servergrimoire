@@ -13,7 +13,7 @@ def dynamic_import(abs_module_path, class_name):
 
 @click.group()
 @click.option('--c', "-config", help="Path of the config if different from standard",
-              default="~\.servergrimoire_config")
+              default=None)
 @click.pass_context
 def grimoire(ctx, c):
     ctx.obj = GrimoirePage(c)
