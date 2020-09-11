@@ -84,7 +84,7 @@ class GrimoirePage:
         with open(self.setting_manager.data_path, 'w') as json_file:
             json.dump(self.data, json_file)
 
-    def stats(self, command=None, url=None) -> bool:
+    def stats(self, command=None, url=None) -> None:
         """
         Launch stats command for plugin
         """
@@ -93,7 +93,6 @@ class GrimoirePage:
             command_to_run = self.__get_directives_str()
         else:
             command_to_run = [command]
-        url_to_run = None
         if url is None:
             url_to_run = self.__get_urls_all()
         else:
@@ -105,7 +104,8 @@ class GrimoirePage:
             for url in url_to_run:
                 all = map_command[command]().stats(command, self.data['server'][url])
                 for key in all.keys():
-                    printable[command][key] = printable[command].get("key", 0) + int(all[key])
+                    printable[command][key] = printable[command].get(key, 0) + int(all[key])
+
 
         for command in printable.keys():
             message = [(k, v) for k, v in printable[command].items()]
@@ -117,10 +117,11 @@ class GrimoirePage:
         """
         Add command for url
         """
-        if self.data.get("server") is None:
-            self.data["server"]={}
-        if self.data['server'].get(url) is None :
-            self.data['server'][url] = {"url": url}
+        for e in url:
+            if self.data.get("server") is None:
+                self.data["server"]={}
+            if self.data['server'].get(e) is None :
+                self.data['server'][e] = {"url": e}
         with open(self.setting_manager.data_path, 'w') as json_file:
             json.dump(self.data, json_file)
 
