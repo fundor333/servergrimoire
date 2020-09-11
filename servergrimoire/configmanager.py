@@ -5,7 +5,7 @@ from pathlib import Path
 
 class ConfigManager:
     def __init__(self, path):
-        self.config={}
+        self.config = {}
         if path is None:
             path = Path.home() / ".servergrimoire_config"
         self.path = path
@@ -17,7 +17,7 @@ class ConfigManager:
                 self.config = json.load(data_file)
 
     def create_default(self) -> dict:
-        with open(Path(self.path), 'w') as outfile:
+        with open(Path(self.path), "w") as outfile:
             self.config["data_path"] = str(Path.home() / ".servergrimoire_data")
             json.dump(self.config, outfile)
         return self.config
