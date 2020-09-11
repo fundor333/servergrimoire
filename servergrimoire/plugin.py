@@ -7,7 +7,7 @@ class Plugin(object):
     Abstract base class for commands that process directives.
     """
 
-    def __init__(self, context):
+    def __init__(self):
         self.l = PrintColor()
 
     def can_handle(self, directive: str) -> bool:
@@ -25,5 +25,12 @@ class Plugin(object):
     def stats(self, directive: str, data: dict) -> {str: int}:
         """
         Return the stats for the directive
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    def get_directives() -> [str]:
+        """
+        Return all the directive
         """
         raise NotImplementedError
