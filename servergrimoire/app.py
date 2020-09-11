@@ -57,7 +57,7 @@ class GrimoirePage:
         Return all urls into a array
         """
         try:
-            return self.data['server'].keys()
+            return self.data["server"].keys()
         except:
             return []
 
@@ -79,9 +79,11 @@ class GrimoirePage:
         for url in url_to_run:
             for command in command_to_run:
                 cl = map_command[command]()
-                self.data['server'][url][command] = cl.execute(directive=command, data=self.data['server'][url])
+                self.data["server"][url][command] = cl.execute(
+                    directive=command, data=self.data["server"][url]
+                )
 
-        with open(self.setting_manager.data_path, 'w') as json_file:
+        with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
 
     def stats(self, command=None, url=None) -> None:
@@ -102,10 +104,11 @@ class GrimoirePage:
         for command in command_to_run:
             printable[command] = {}
             for url in url_to_run:
-                all = map_command[command]().stats(command, self.data['server'][url])
+                all = map_command[command]().stats(command, self.data["server"][url])
                 for key in all.keys():
-                    printable[command][key] = printable[command].get(key, 0) + int(all[key])
-
+                    printable[command][key] = printable[command].get(key, 0) + int(
+                        all[key]
+                    )
 
         for command in printable.keys():
             message = [(k, v) for k, v in printable[command].items()]
@@ -119,16 +122,16 @@ class GrimoirePage:
         """
         for e in url:
             if self.data.get("server") is None:
-                self.data["server"]={}
-            if self.data['server'].get(e) is None :
-                self.data['server'][e] = {"url": e}
-        with open(self.setting_manager.data_path, 'w') as json_file:
+                self.data["server"] = {}
+            if self.data["server"].get(e) is None:
+                self.data["server"][e] = {"url": e}
+        with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
 
     def remove(self, url=None) -> bool:
         """
         Remove command for url
         """
-        self.data['server'].pop(url, None)
-        with open(self.setting_manager.data_path, 'w') as json_file:
+        self.data["server"].pop(url, None)
+        with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)

@@ -8,7 +8,7 @@ class DNSLookup(Plugin):
 
     @staticmethod
     def get_directives() -> [str]:
-        return ['dns_lookup']
+        return ["dns_lookup"]
 
     def execute(self, directive: str, data: dict) -> dict:
         domain = data["url"]
@@ -25,10 +25,10 @@ class DNSLookup(Plugin):
                 output[label] = ""
                 for rdata in dns.resolver.resolve(query, label):
 
-                    if output[label]== "":
-                        output[label]=f'"str(rdata)"'
+                    if output[label] == "":
+                        output[label] = f'"str(rdata)"'
                     else:
-                        output[label] =f'{output[label]} , "{str(rdata)}"'
+                        output[label] = f'{output[label]} , "{str(rdata)}"'
             except:
                 output.pop(label)
                 self.l.info(f"Not found {label} for {domain}")
