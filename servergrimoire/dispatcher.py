@@ -32,28 +32,20 @@ def run(ctx, c, u):
 @click.option('--u', "-url", help="On which url return the stats")
 @click.pass_context
 def stats(ctx, c, u):
-    click.echo(c)
-    click.echo(u)
     ctx.obj.stats(c, u)
 
 
 @grimoire.command(help="Add the url to the command check")
-@click.option('--c', "-command", help="Command to be add")
-@click.option('--u', "-url", help="Url to add")
+@click.option('--u', "-url", help="Url to add", multiple=True)
 @click.pass_context
-def add(ctx, c, u):
-    click.echo(c)
-    click.echo(u)
-    ctx.obj.add(c, u)
+def add(ctx,  u):
+    ctx.obj.add( url= u)
 
 
 @grimoire.command(help="Remove the url to the command check")
-@click.option('--c', "-command", help="Command to be removed")
 @click.option('--u', "-url", help="Url to remove")
 @click.pass_context
 def remove(ctx, c, u):
-    click.echo(c)
-    click.echo(u)
     ctx.obj.remove(c, u)
 
 

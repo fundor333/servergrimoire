@@ -1,4 +1,7 @@
 import json
+from pprint import pprint
+
+from tabulate import tabulate
 
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
@@ -16,10 +19,9 @@ class GrimoirePage:
             with open(self.setting_manager.data_path) as f:
                 self.data = json.load(f)
         except FileNotFoundError:
-            with open(self.setting_manager.data_path,"w") as f:
+            with open(self.setting_manager.data_path, "w") as f:
                 json.dump({}, f)
-            self.data={}
-
+            self.data = {}
 
     def __get_directives_and_class(self) -> dict:
         """
@@ -77,7 +79,7 @@ class GrimoirePage:
         for url in url_to_run:
             for command in command_to_run:
                 cl = map_command[command]()
-                self.data['server'][url][command] = cl.execute(directive=command,data=self.data['server'][url])
+                self.data['server'][url][command] = cl.execute(directive=command, data=self.data['server'][url])
 
         with open(self.setting_manager.data_path, 'w') as json_file:
             json.dump(self.data, json_file)
@@ -86,16 +88,46 @@ class GrimoirePage:
         """
         Launch stats command for plugin
         """
-        raise NotImplementedError
+        map_command = self.__get_directives_and_class()
+        if command is None:
+            command_to_run = self.__get_directives_str()
+        else:
+            command_to_run = [command]
+        url_to_run = None
+        if url is None:
+            url_to_run = self.__get_urls_all()
+        else:
+            url_to_run = [url]
 
-    def add(self, command=None, url=None) -> bool:
+        printable = {}
+        for command in command_to_run:
+            printable[command] = {}
+            for url in url_to_run:
+                all = map_command[command]().stats(command, self.data['server'][url])
+                for key in all.keys():
+                    printable[command][key] = printable[command].get("key", 0) + int(all[key])
+
+        for command in printable.keys():
+            message = [(k, v) for k, v in printable[command].items()]
+            head = [command, ""]
+            print(tabulate(message, head, tablefmt="pipe"))
+            print()
+
+    def add(self, url) -> bool:
         """
         Add command for url
         """
-        raise NotImplementedError
+        if self.data.get("server") is None:
+            self.data["server"]={}
+        if self.data['server'].get(url) is None :
+            self.data['server'][url] = {"url": url}
+        with open(self.setting_manager.data_path, 'w') as json_file:
+            json.dump(self.data, json_file)
 
-    def remove(self, command=None, url=None) -> bool:
+    def remove(self, url=None) -> bool:
         """
         Remove command for url
         """
-        raise NotImplementedError
+        self.data['server'].pop(url, None)
+        with open(self.setting_manager.data_path, 'w') as json_file:
+            json.dump(self.data, json_file)

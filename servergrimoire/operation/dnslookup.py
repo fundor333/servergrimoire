@@ -22,9 +22,15 @@ class DNSLookup(Plugin):
         output = {}
         for query, label in array_input:
             try:
+                output[label] = ""
                 for rdata in dns.resolver.resolve(query, label):
-                    output[label] = str(rdata)
+
+                    if output[label]== "":
+                        output[label]=f'"str(rdata)"'
+                    else:
+                        output[label] =f'{output[label]} , "{str(rdata)}"'
             except:
+                output.pop(label)
                 self.l.info(f"Not found {label} for {domain}")
         return output
 
