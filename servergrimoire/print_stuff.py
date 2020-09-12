@@ -1,7 +1,6 @@
 from tabulate import tabulate
 
-
-class PrintColor:
+class ColorClass:
     def __init__(self, palet=None):
         if palet is None:
             palet = dict()
@@ -11,6 +10,19 @@ class PrintColor:
         self.fail_color = palet.get("fail", "\033[91m")
         self.end_color = palet.get("endc", "\033[0m")
 
+    def info(self, message: str) -> str:
+        raise NotImplementedError
+
+    def debug(self, message: str) -> str:
+        raise NotImplementedError
+
+    def warning(self, message: str) -> str:
+        raise NotImplementedError
+
+    def fail(self, message: str) -> str:
+        raise NotImplementedError
+
+class StrColor(ColorClass):
     def __printer__(self, message: str, color: str = None) -> str:
         return f"{color}{message}{self.end_color}"
 
@@ -27,8 +39,19 @@ class PrintColor:
         return self.__printer__(message, self.fail_color)
 
 
-def print_t(input, headers: [str] = None):
-    if headers:
-        print(tabulate(input, headers, tablefmt="pipe"))
-    else:
-        print(tabulate(input, tablefmt="pipe"))
+class PrintColor(ColorClass):
+    def __init__(self, palet=None):
+        super().__init__(palet)
+        self.s = StrColor(palet)
+
+    def info(self, message: str) -> str:
+        return self.s.info(message)
+
+    def debug(self, message: str) -> str:
+        return self.s.debug(message)
+
+    def warning(self, message: str) -> str:
+        return self.s.warning(message)
+
+    def fail(self, message: str) -> str:
+        return self.s.fail(message)

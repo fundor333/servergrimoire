@@ -116,6 +116,30 @@ class GrimoirePage:
             print(tabulate(message, head, tablefmt="pipe"))
             print()
 
+    def info(self, command=None, url=None) -> None:
+        """
+        Launch info command for plugin
+        """
+        map_command = self.__get_directives_and_class()
+        if command is None:
+            command_to_run = self.__get_directives_str()
+        else:
+            command_to_run = [command]
+        if url is None:
+            url_to_run = self.__get_urls_all()
+        else:
+            url_to_run = [url]
+
+        printable = {}
+        for command in command_to_run:
+            printable[command] = {}
+            for url in url_to_run:
+                all = map_command[command]().info(directive=command, data=self.data["server"][url])
+                printable[command][url]=all
+
+        pprint(printable)
+
+
     def add(self, url) -> bool:
         """
         Add command for url
