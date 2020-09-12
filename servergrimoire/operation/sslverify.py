@@ -40,6 +40,8 @@ class SSLVerify(Plugin):
             output_strng = BROKEN_RESPONSE
         except ssl.CertificateError as e:
             output_strng = BROKEN_RESPONSE
+        except TimeoutError :
+            output_strng= BROKEN_RESPONSE
         except ssl.SSLError as e:
             output_strng = BROKEN_RESPONSE
         except socket.timeout as e:

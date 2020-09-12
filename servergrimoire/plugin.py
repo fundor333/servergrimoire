@@ -28,9 +28,9 @@ class Plugin(object):
         """
         raise NotImplementedError
 
-    @staticmethod
-    def get_directives() -> [str]:
+    def info(self, directive: str, data: dict) :
         """
-        Return all the directive
+        Return info of the directive
         """
-        raise NotImplementedError
+        return data.get(directive,dict())
+
