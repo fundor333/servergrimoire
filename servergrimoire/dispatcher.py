@@ -39,6 +39,15 @@ def run(ctx, c, u):
 def stats(ctx, c, u):
     ctx.obj.stats(c, u)
 
+@grimoire.command(help="Show the info")
+@click.option("--u", "-url", help="On which url return the info")
+@click.option(
+    "--c", "-command", help="On which directive return the info"
+)
+@click.pass_context
+def info(ctx, c, u):
+    ctx.obj.info(command=c, url=u)
+
 
 @grimoire.command(help="Add the url to the command check")
 @click.option("--u", "-url", help="Url to add", multiple=True)

@@ -17,9 +17,10 @@ class DNSLookup(Plugin):
         ]
         output = {}
         for query, label in array_input:
+            output[label]=[]
             try:
                 for rdata in dns.resolver.resolve(query, label):
-                    output[label] = str(rdata)
+                    output[label].append(str(rdata))
             except:
                 self.l.info(f"Not found {label} for {domain}")
         return output
