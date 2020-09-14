@@ -20,6 +20,13 @@ Y88b  d88P 888     888 888  888  888 Y88..88P 888 888    Y8b.
  "Y8888P88 888     888 888  888  888  "Y88P"  888 888     "Y8888  
 ```                   
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/4aece0d4c29b48cfcea4/maintainability)](https://codeclimate.com/github/fundor333/servergrimoire/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/4aece0d4c29b48cfcea4/test_coverage)](https://codeclimate.com/github/fundor333/servergrimoire/test_coverage)
+![PyPI - License](https://img.shields.io/pypi/l/servergrimoire)
+![PyPI](https://img.shields.io/pypi/v/servergrimoire)
+![PyPI - Status](https://img.shields.io/pypi/status/servergrimoire)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/servergrimoire)
+
 This module gives you some command to check URLs, domains and other things in an automatied way.
 
 All config and data are saved as dotfiles in your home directory and it works on Windows, Mac, and Linux systems granted you have Python installed.
