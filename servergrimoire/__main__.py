@@ -1,5 +1,6 @@
 from .dispatcher import grimoire
 
+
 def launcher():
     grimoire(prog_name='servergrimoire')
 

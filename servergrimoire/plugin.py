@@ -1,3 +1,4 @@
+from .configmanager import ConfigManager
 from .print_stuff import PrintColor
 
 
@@ -6,8 +7,8 @@ class Plugin(object):
     Abstract base class for commands that process directives.
     """
 
-    def __init__(self):
-        self.l = PrintColor()
+    def __init__(self, config: ConfigManager):
+        self.l = PrintColor(config)
 
     def can_handle(self, directive: str) -> bool:
         """

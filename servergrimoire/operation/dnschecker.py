@@ -1,5 +1,7 @@
 import datetime
+
 import whois
+
 from servergrimoire.plugin import Plugin
 
 
@@ -21,7 +23,7 @@ class DNSChecker(Plugin):
             }
         else:
             flag = w.expiration_date >= (
-                datetime.datetime.now() - datetime.timedelta(days=30)
+                    datetime.datetime.now() - datetime.timedelta(days=30)
             )
 
             if flag:
@@ -40,7 +42,11 @@ class DNSChecker(Plugin):
         self.l.info(output_strng)
         return output_strng
 
-    def stats(self, directive: str, data: dict)-> ({str: int}, {str: str}):
+    def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
         stat = {"OK": 0, "KO": 0, "XX": 0}
         stat[data[directive]["status"]] = 1
-        return stat, dict()
+        other = {}
+        if data[directive]["status"] != "OK":
+            other = {data[directive]["domain"]: data[directive]['expired']}
+        return stat, other
+

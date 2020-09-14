@@ -1,5 +1,7 @@
 import datetime
+
 import whois
+
 from servergrimoire.plugin import Plugin
 
 
@@ -17,7 +19,7 @@ class DNSChecker(Plugin):
             }
         else:
             flag = w.expiration_date >= (
-                datetime.datetime.now() - datetime.timedelta(days=30)
+                    datetime.datetime.now() - datetime.timedelta(days=30)
             )
 
             if flag:
