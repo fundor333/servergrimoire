@@ -1,5 +1,7 @@
-from servergrimoire.configmanager import ConfigManager
+import sys
 
+from servergrimoire.configmanager import ConfigManager
+from loguru import logger
 
 class ColorClass:
     def __init__(self, config: ConfigManager):
@@ -27,8 +29,6 @@ class ColorClass:
 
 
 class StrColor(ColorClass):
-    def __init__(self, palet=None):
-        super().__init__(palet)
 
     def __printer__(self, message: str, color: str = None) -> str:
         return f"{color}{message}{self.end_color}"
@@ -47,18 +47,20 @@ class StrColor(ColorClass):
 
 
 class PrintColor(ColorClass):
-    def __init__(self, palet=None):
-        super().__init__(palet)
-        self.s = StrColor(palet)
+    def __init__(self, config: ConfigManager):
+        super().__init__(config)
+        self.s = StrColor(config)
+        logger.remove()
+        logger.add(sys.stderr, level=self.config.logger_level)
 
     def info(self, message: str) -> str:
-        return self.s.info(message)
+        return logger.info(self.s.info(message))
 
     def debug(self, message: str) -> str:
-        return self.s.debug(message)
+        return logger.debug(self.s.debug(message))
 
     def warning(self, message: str) -> str:
-        return self.s.warning(message)
+        return logger.warning(self.s.warning(message))
 
     def error(self, message: str) -> str:
-        return self.s.fail(message)
+        return logger.error(self.s.fail(message))

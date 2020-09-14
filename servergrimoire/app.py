@@ -8,12 +8,14 @@ from servergrimoire.operation.dnschecker import DNSChecker
 from servergrimoire.operation.dnslookup import DNSLookup
 from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.plugin import Plugin
+from servergrimoire.print_stuff import StrColor
 
 
 class GrimoirePage:
     def __init__(self, path):
         self.path = path
         self.setting_manager = ConfigManager(path)
+        self.st=StrColor(self.setting_manager)
         try:
             with open(self.setting_manager.data_path) as f:
                 self.data = json.load(f)
@@ -116,10 +118,11 @@ class GrimoirePage:
                         all[key]
                     )
 
+
         for command in printable.keys():
-            message = [(k, v) for k, v in printable[command].items()]
+            message = [(k,v) for k, v in printable[command].items()]
             try:
-                message_error = [(k, v) for k, v in printable_error[command].items()]
+                message_error = [(self.st.error(k), self.st.error(v)) for k, v in printable_error[command].items()]
             except AttributeError:
                 message_error = []
             head = [command, ""]

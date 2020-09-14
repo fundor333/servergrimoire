@@ -27,6 +27,7 @@ class ConfigManager:
         l.debug(self.data_path)
         self.config["data_path"] = f'{self.config["data_path"]}'
         l.debug(self.colors)
+        l.debug(self.logger_level)
 
     def __write_config__(self):
         with open(Path(self.path), "w") as outfile:
@@ -78,3 +79,18 @@ class ConfigManager:
         self.config["colors"]["warning_color"] = var.get("fail_color", "\033[91m")
         self.config["colors"]["end_color"] = var.get("end_color", "\033[0m")
         return self.config["colors"]
+
+
+    @property
+    def logger_level(self):
+        return self.config["logger_level"]
+
+    @logger_level.setter
+    def logger_level(self, var):
+        self.config["logger_level"] = var
+
+    @logger_level.getter
+    def logger_level(self):
+        if self.config.get("logger_level", None) is None:
+            self.config["logger_level"] = "ERROR"
+        return self.config["logger_level"]
