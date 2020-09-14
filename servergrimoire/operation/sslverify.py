@@ -38,6 +38,8 @@ class SSLVerify(Plugin):
         url = data["url"]
         try:
             will_expire_in = self.__ssl_valid_time_remaining(url)
+        except OSError as e:
+            output_strng = broken_response(url)
         except FileNotFoundError as e:
             output_strng = broken_response(url)
         except socket.gaierror as e:
