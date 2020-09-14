@@ -49,4 +49,3 @@ class DNSChecker(Plugin):
         if data[directive]["status"] != "OK":
             other = {data[directive]["domain"]: data[directive]['expired']}
         return stat, other
-

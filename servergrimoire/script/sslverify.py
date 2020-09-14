@@ -2,9 +2,14 @@ import datetime
 import socket
 import ssl
 
+from loguru import logger
+
 from servergrimoire.plugin import Plugin
 
-BROKEN_RESPONSE = {"status": "KO", "expired": "****-**-** **:**:**"}
+
+def broken_response(url: str, e: Exception) -> str:
+    logger.info(f"{url} return {e}")
+    return {"status": "KO", "expired": "****-**-** **:**:**"}
 
 
 class SSLVerify(Plugin):
@@ -19,10 +24,9 @@ class SSLVerify(Plugin):
             socket.socket(socket.AF_INET), server_hostname=hostname,
         )
 
-        self.l.debug("Connect to {}".format(hostname))
+        self.l.info("Connect to {}".format(hostname))
         conn.connect((hostname, 443))
         ssl_info = conn.getpeercert()
-        # parse the string from the certificate into a Python datetime object
         return datetime.datetime.strptime(ssl_info["notAfter"], ssl_date_fmt)
 
     def execute(self, directive: str, data: dict) -> dict:
@@ -32,25 +36,28 @@ class SSLVerify(Plugin):
         try:
             will_expire_in = self.__ssl_valid_time_remaining(data["url"])
         except FileNotFoundError as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(e)
         except socket.gaierror as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(e)
         except ssl.CertificateError as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(e)
         except ssl.SSLError as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(e)
         except socket.timeout as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(e)
         else:
             if will_expire_in is None:
-                output_strng = BROKEN_RESPONSE
+                output_strng = {"status": "KO", "expired": "****-**-** **:**:**"}
+                self.l.info(f"{directive} return {output_strng}")
             elif will_expire_in < limit:
                 output_strng = {"status": "KO", "expired": str(will_expire_in)}
+                self.l.info(f"{directive} return {output_strng}")
             elif will_expire_in < limit:
                 output_strng = {"status": "XX", "expired": str(will_expire_in)}
+                self.l.info(f"{directive} return {output_strng}")
             else:
                 output_strng = {"status": "OK", "expired": str(will_expire_in)}
-        self.l.info(f"{directive} return {output_strng}")
+                self.l.info(f"{directive} return {output_strng}")
         return output_strng
 
     def stats(self, directive: str, data: dict) -> {str: int}:

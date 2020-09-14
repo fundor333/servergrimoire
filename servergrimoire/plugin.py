@@ -1,5 +1,4 @@
-from .configmanager import ConfigManager
-from .print_stuff import PrintColor, StrColor
+from loguru import logger
 
 
 class Plugin(object):
@@ -7,9 +6,8 @@ class Plugin(object):
     Abstract base class for commands that process directives.
     """
 
-    def __init__(self, config: ConfigManager):
-        self.l = PrintColor(config)
-        self.str = StrColor(config)
+    def __init__(self):
+        self.l = logger.bind(task=type(self).__name__)
 
     def can_handle(self, directive: str) -> bool:
         """
