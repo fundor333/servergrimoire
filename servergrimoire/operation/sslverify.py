@@ -1,6 +1,7 @@
 import datetime
 import socket
 import ssl
+
 from servergrimoire.plugin import Plugin
 
 
@@ -53,11 +54,11 @@ class SSLVerify(Plugin):
             if will_expire_in is None:
                 output_strng = broken_response(url)
             elif will_expire_in < limit:
-                output_strng = {"status": "KO", "expired": str(will_expire_in),"domain": url}
+                output_strng = {"status": "KO", "expired": str(will_expire_in), "domain": url}
             elif will_expire_in < limit:
-                output_strng = {"status": "XX", "expired": str(will_expire_in),"domain": url}
+                output_strng = {"status": "XX", "expired": str(will_expire_in), "domain": url}
             else:
-                output_strng = {"status": "OK", "expired": str(will_expire_in),"domain": url}
+                output_strng = {"status": "OK", "expired": str(will_expire_in), "domain": url}
         self.l.info(f"{directive} return {output_strng}")
         return output_strng
 

@@ -14,7 +14,6 @@ class GrimoirePage:
     def __init__(self, path):
         self.path = path
         self.setting_manager = ConfigManager(path)
-
         try:
             with open(self.setting_manager.data_path) as f:
                 self.data = json.load(f)
@@ -78,7 +77,7 @@ class GrimoirePage:
 
         for url in url_to_run:
             for command in command_to_run:
-                cl = map_command[command]()
+                cl = map_command[command](self.setting_manager)
                 self.data["server"][url][command] = cl.execute(
                     directive=command, data=self.data["server"][url]
                 )
@@ -101,13 +100,13 @@ class GrimoirePage:
             url_to_run = [url]
 
         printable = {}
-        printable_error= {}
+        printable_error = {}
 
         for command in command_to_run:
             printable[command] = {}
             printable_error[command] = {}
             for url in url_to_run:
-                all, errors = map_command[command]().stats(command, self.data["server"][url])
+                all, errors = map_command[command](self.setting_manager).stats(command, self.data["server"][url])
                 try:
                     printable_error[command].update(errors)
                 except AttributeError:
@@ -122,11 +121,11 @@ class GrimoirePage:
             try:
                 message_error = [(k, v) for k, v in printable_error[command].items()]
             except AttributeError:
-                message_error= []
+                message_error = []
             head = [command, ""]
-            if len(message)>0:
+            if len(message) > 0:
                 print(tabulate(message, head, tablefmt="pipe"))
-            if len(message_error)>0:
+            if len(message_error) > 0:
                 print(tabulate(message_error, ["domain", "message"], tablefmt="pipe"))
             print()
 
@@ -148,11 +147,10 @@ class GrimoirePage:
         for command in command_to_run:
             printable[command] = {}
             for url in url_to_run:
-                all = map_command[command]().info(directive=command, data=self.data["server"][url])
-                printable[command][url]=all
+                all = map_command[command](self.setting_manager).info(directive=command, data=self.data["server"][url])
+                printable[command][url] = all
 
         pprint(printable)
-
 
     def add(self, url) -> bool:
         """
