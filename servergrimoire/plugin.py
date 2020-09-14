@@ -1,5 +1,5 @@
 from .configmanager import ConfigManager
-from .print_stuff import PrintColor
+from .print_stuff import PrintColor, StrColor
 
 
 class Plugin(object):
@@ -9,6 +9,7 @@ class Plugin(object):
 
     def __init__(self, config: ConfigManager):
         self.l = PrintColor(config)
+        self.str = StrColor(config)
 
     def can_handle(self, directive: str) -> bool:
         """
