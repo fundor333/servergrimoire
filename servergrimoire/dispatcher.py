@@ -21,13 +21,14 @@ def grimoire(ctx, c):
 
 
 @grimoire.command(help="Run the command")
-@click.option(
-    "--c", "-command", help="Command to run. If not insert launch all the commands"
-)
+@click.option("--c", "-command", help="Command to run. If not insert launch all the commands")
 @click.option("--u", "-url", help="On which url launch the command")
+@click.option('--stats/--no-stats', default=False, help="Launch stats after the run")
 @click.pass_context
-def run(ctx, c, u):
+def run(ctx, c, u, stats):
     ctx.obj.run(c, u)
+    if stats:
+        ctx.obj.stats(c,u)
 
 
 @grimoire.command(help="Show the stats")
