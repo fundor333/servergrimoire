@@ -27,8 +27,8 @@ def grimoire(ctx, c):
 @click.pass_context
 def run(ctx, c, u, stats):
     ctx.obj.run(c, u)
-    if stats:
-        ctx.obj.stats(c,u)
+    if stats == True:
+        ctx.obj.stats(c, u)
 
 
 @grimoire.command(help="Show the stats")
@@ -39,6 +39,7 @@ def run(ctx, c, u, stats):
 @click.pass_context
 def stats(ctx, c, u):
     ctx.obj.stats(c, u)
+
 
 @grimoire.command(help="Show the info")
 @click.option("--u", "-url", help="On which url return the info")

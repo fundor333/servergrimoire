@@ -1,4 +1,3 @@
-from typing import Optional
 from .print_stuff import PrintColor
 
 
@@ -22,15 +21,14 @@ class Plugin(object):
         """
         raise NotImplementedError
 
-    def stats(self, directive: str, data: dict) -> {str: int}:
+    def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
         """
         Return the stats for the directive
         """
         raise NotImplementedError
 
-    def info(self, directive: str, data: dict) :
+    def info(self, directive: str, data: dict):
         """
         Return info of the directive
         """
-        return data.get(directive,dict())
-
+        return data.get(directive, dict())

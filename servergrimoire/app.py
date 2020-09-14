@@ -101,10 +101,17 @@ class GrimoirePage:
             url_to_run = [url]
 
         printable = {}
+        printable_error= {}
+
         for command in command_to_run:
             printable[command] = {}
+            printable_error[command] = {}
             for url in url_to_run:
-                all = map_command[command]().stats(command, self.data["server"][url])
+                all, errors = map_command[command]().stats(command, self.data["server"][url])
+                try:
+                    printable_error[command].update(errors)
+                except AttributeError:
+                    printable_error[command] = errors
                 for key in all.keys():
                     printable[command][key] = printable[command].get(key, 0) + int(
                         all[key]
@@ -112,8 +119,15 @@ class GrimoirePage:
 
         for command in printable.keys():
             message = [(k, v) for k, v in printable[command].items()]
+            try:
+                message_error = [(k, v) for k, v in printable_error[command].items()]
+            except AttributeError:
+                message_error= []
             head = [command, ""]
-            print(tabulate(message, head, tablefmt="pipe"))
+            if len(message)>0:
+                print(tabulate(message, head, tablefmt="pipe"))
+            if len(message_error)>0:
+                print(tabulate(message_error, ["domain", "message"], tablefmt="pipe"))
             print()
 
     def info(self, command=None, url=None) -> None:

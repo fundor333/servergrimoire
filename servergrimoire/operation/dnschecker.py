@@ -40,7 +40,7 @@ class DNSChecker(Plugin):
         self.l.info(output_strng)
         return output_strng
 
-    def stats(self, directive: str, data: dict) -> {str: int}:
+    def stats(self, directive: str, data: dict)-> ({str: int}, {str: str}):
         stat = {"OK": 0, "KO": 0, "XX": 0}
         stat[data[directive]["status"]] = 1
-        return stat
+        return stat, dict()

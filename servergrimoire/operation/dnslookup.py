@@ -34,5 +34,5 @@ class DNSLookup(Plugin):
                 self.l.info(f"Not found {label} for {domain}")
         return output
 
-    def stats(self, directive: str, data: dict) -> {str: int}:
-        return dict()
+    def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
+        return dict(),dict()
