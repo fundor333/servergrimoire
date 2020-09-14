@@ -3,7 +3,9 @@ import socket
 import ssl
 from servergrimoire.plugin import Plugin
 
-BROKEN_RESPONSE = {"status": "KO", "expired": "****-**-** **:**:**"}
+
+def broken_response(url) -> {str, str, str}:
+    return {"status": "KO", "expired": "****-**-** **:**:**", "domain": url}
 
 
 class SSLVerify(Plugin):
@@ -32,33 +34,37 @@ class SSLVerify(Plugin):
         """Return test message for hostname cert expiration."""
         limit = datetime.datetime.now() + datetime.timedelta(days=30)
         output_strng = None
+        url = data["url"]
         try:
-            will_expire_in = self.__ssl_valid_time_remaining(data["url"])
+            will_expire_in = self.__ssl_valid_time_remaining(url)
         except FileNotFoundError as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(url)
         except socket.gaierror as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(url)
         except ssl.CertificateError as e:
-            output_strng = BROKEN_RESPONSE
-        except TimeoutError :
-            output_strng= BROKEN_RESPONSE
+            output_strng = broken_response(url)
+        except TimeoutError:
+            output_strng = broken_response(url)
         except ssl.SSLError as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(url)
         except socket.timeout as e:
-            output_strng = BROKEN_RESPONSE
+            output_strng = broken_response(url)
         else:
             if will_expire_in is None:
-                output_strng = BROKEN_RESPONSE
+                output_strng = broken_response(url)
             elif will_expire_in < limit:
-                output_strng = {"status": "KO", "expired": str(will_expire_in)}
+                output_strng = {"status": "KO", "expired": str(will_expire_in),"domain": url}
             elif will_expire_in < limit:
-                output_strng = {"status": "XX", "expired": str(will_expire_in)}
+                output_strng = {"status": "XX", "expired": str(will_expire_in),"domain": url}
             else:
-                output_strng = {"status": "OK", "expired": str(will_expire_in)}
+                output_strng = {"status": "OK", "expired": str(will_expire_in),"domain": url}
         self.l.info(f"{directive} return {output_strng}")
         return output_strng
 
-    def stats(self, directive: str, data: dict) -> {str: int}:
+    def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
         stat = {"OK": 0, "KO": 0, "XX": 0}
         stat[data[directive]["status"]] = 1
-        return stat
+        other = {}
+        if data[directive]["status"] != "OK":
+            other = {data[directive]["domain"]: data[directive]['expired']}
+        return stat, other
