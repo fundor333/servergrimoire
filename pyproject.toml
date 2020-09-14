@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "servergrimoire"
-version = "1.0.6"
+version = "1.0.7"
 description = "Package for record and store info about servers and their stuffs"
 authors = ["Fundor333 <fundor333@fundor333.com>"]
 
@@ -12,10 +12,11 @@ readme = "README.md"
 keywords = ["devops", "ssl", "sysadmin"]
 
 classifiers = [
-        'Intended Audience :: System Administrators',
-        'License :: OSI Approved :: MIT License',
-        'Topic :: System :: Networking :: Monitoring',
-        'Intended Audience :: Developers',
+    'Intended Audience :: System Administrators',
+    'License :: OSI Approved :: MIT License',
+    'Topic :: System :: Networking :: Monitoring',
+    'Intended Audience :: Developers',
+    "Development Status :: 4 - Beta",
 ]
 
 [tool.poetry.dependencies]

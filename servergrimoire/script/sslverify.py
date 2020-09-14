@@ -1,6 +1,7 @@
 import datetime
 import socket
 import ssl
+
 from servergrimoire.plugin import Plugin
 
 BROKEN_RESPONSE = {"status": "KO", "expired": "****-**-** **:**:**"}

@@ -1,7 +1,10 @@
-from tabulate import tabulate
+from servergrimoire.configmanager import ConfigManager
+
 
 class ColorClass:
-    def __init__(self, palet=None):
+    def __init__(self, config: ConfigManager):
+        self.config = config
+        palet = self.config.colors
         if palet is None:
             palet = dict()
         self.info_color = palet.get("okblue", "\033[94m")
@@ -19,10 +22,14 @@ class ColorClass:
     def warning(self, message: str) -> str:
         raise NotImplementedError
 
-    def fail(self, message: str) -> str:
+    def error(self, message: str) -> str:
         raise NotImplementedError
 
+
 class StrColor(ColorClass):
+    def __init__(self, palet=None):
+        super().__init__(palet)
+
     def __printer__(self, message: str, color: str = None) -> str:
         return f"{color}{message}{self.end_color}"
 
@@ -35,7 +42,7 @@ class StrColor(ColorClass):
     def warning(self, message: str) -> str:
         return self.__printer__(message, self.warning_color)
 
-    def fail(self, message: str) -> str:
+    def error(self, message: str) -> str:
         return self.__printer__(message, self.fail_color)
 
 
@@ -53,5 +60,5 @@ class PrintColor(ColorClass):
     def warning(self, message: str) -> str:
         return self.s.warning(message)
 
-    def fail(self, message: str) -> str:
+    def error(self, message: str) -> str:
         return self.s.fail(message)

@@ -1,4 +1,5 @@
 import dns.resolver
+
 from servergrimoire.plugin import Plugin
 
 
@@ -17,7 +18,7 @@ class DNSLookup(Plugin):
         ]
         output = {}
         for query, label in array_input:
-            output[label]=[]
+            output[label] = []
             try:
                 for rdata in dns.resolver.resolve(query, label):
                     output[label].append(str(rdata))

@@ -1,4 +1,5 @@
 import dns.resolver
+
 from servergrimoire.plugin import Plugin
 
 
@@ -35,4 +36,4 @@ class DNSLookup(Plugin):
         return output
 
     def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
-        return dict(),dict()
+        return dict(), dict()
