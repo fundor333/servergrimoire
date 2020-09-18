@@ -1,3 +1,4 @@
+from loguru import logger
 from unittest.case import TestCase
 
 from servergrimoire.operation.sslverify import SSLVerify
@@ -59,3 +60,4 @@ class SSLVerifyTest(TestCase, PluginT):
 
     def test_execute(self):
         out = self.plugin.execute("ssl_check",self.data )
+        logger.error(out)
