@@ -1,7 +1,7 @@
 import datetime
 import socket
 import ssl
-
+from termcolor import colored
 from servergrimoire.plugin import Plugin
 
 
@@ -72,7 +72,7 @@ class SSLVerify(Plugin):
             stat[data[directive]["status"]] = 1
             other = {}
             if data[directive]["status"] != "OK":
-                other = {data[directive]["domain"]: data[directive]['expired']}
+                other = {colored(data[directive]["domain"],"red"): colored(data[directive]['expired'], "red")}
             return stat, other
         except KeyError as e:
             self.l.error(str(e))
