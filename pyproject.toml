@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "servergrimoire"
-version = "1.0.9"
+version = "1.0.10"
 description = "Package for record and store info about servers and their stuffs"
 authors = ["Fundor333 <fundor333@fundor333.com>"]
 
@@ -28,6 +28,7 @@ dnspython = "^2.0.0"
 python-whois = "^0.7.3"
 Click = "^7.1.2"
 loguru = "^0.5.2"
+termcolor = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6.11"

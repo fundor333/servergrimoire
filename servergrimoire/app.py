@@ -1,6 +1,6 @@
 import json
 from pprint import pprint
-
+from colorama import init
 from loguru import logger
 from tabulate import tabulate
 
@@ -92,6 +92,7 @@ class GrimoirePage:
         """
         Launch stats command for plugin
         """
+        init()
         logger.info(f"Start stats for {command} with url {url}")
         map_command = self.__get_directives_and_class()
         if command is None:
