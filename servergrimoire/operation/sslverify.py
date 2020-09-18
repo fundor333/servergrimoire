@@ -38,6 +38,8 @@ class SSLVerify(Plugin):
         url = data["url"]
         try:
             will_expire_in = self.__ssl_valid_time_remaining(url)
+        except ResourceWarning as e:
+            output_strng = broken_response(url)
         except OSError as e:
             output_strng = broken_response(url)
         except FileNotFoundError as e:
@@ -65,9 +67,13 @@ class SSLVerify(Plugin):
         return output_strng
 
     def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
-        stat = {"OK": 0, "KO": 0, "XX": 0}
-        stat[data[directive]["status"]] = 1
-        other = {}
-        if data[directive]["status"] != "OK":
-            other = {data[directive]["domain"]: data[directive]['expired']}
-        return stat, other
+        try:
+            stat = {"OK": 0, "KO": 0, "XX": 0}
+            stat[data[directive]["status"]] = 1
+            other = {}
+            if data[directive]["status"] != "OK":
+                other = {data[directive]["domain"]: data[directive]['expired']}
+            return stat, other
+        except KeyError as e:
+            self.l.error(str(e))
+            return {}, {}
