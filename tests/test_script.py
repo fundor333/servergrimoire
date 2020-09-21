@@ -1,8 +1,10 @@
+import sys
 from loguru import logger
 from unittest.case import TestCase
-
 from servergrimoire.operation.sslverify import SSLVerify
 
+logger.remove()
+logger.add(sys.stdout, level="DEBUG")
 
 class PluginT:
     def get_plugin(self):
