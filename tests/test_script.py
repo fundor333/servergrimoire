@@ -1,7 +1,7 @@
+from loguru import logger
 from unittest.case import TestCase
 
 from servergrimoire.operation.sslverify import SSLVerify
-
 
 
 class PluginT:
@@ -47,15 +47,22 @@ class PluginT:
 
 
 class SSLVerifyTest(TestCase, PluginT):
-
     def setUp(self):
         self.plugin = SSLVerify()
-        self.data = {"url": "fundor333.com","ssl_check": {"status": "KO", "expired": "expiration date","domain":"google.com"}}
+        self.data = {
+            "url": "fundor333.com",
+            "ssl_check": {
+                "status": "KO",
+                "expired": "expiration date",
+                "domain": "google.com",
+            },
+        }
 
     def status_test(self):
         stats, error = self.plugin.stats(data=self.data)
-        self.assertDictEqual({"OK": 0, "KO": 1, "XX": 0},stats)
-        self.assertDictEqual({"KO": "expiration date"},error)
+        self.assertDictEqual({"OK": 0, "KO": 1, "XX": 0}, stats)
+        self.assertDictEqual({"KO": "expiration date"}, error)
 
     def test_execute(self):
-        out = self.plugin.execute("ssl_check",self.data )
+        out = self.plugin.execute("ssl_check", self.data)
+        logger.error(out)

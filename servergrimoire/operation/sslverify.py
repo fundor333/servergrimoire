@@ -1,7 +1,7 @@
 import datetime
 import socket
 import ssl
-
+from termcolor import colored
 from servergrimoire.plugin import Plugin
 
 
@@ -58,11 +58,23 @@ class SSLVerify(Plugin):
             if will_expire_in is None:
                 output_strng = broken_response(url)
             elif will_expire_in < limit:
-                output_strng = {"status": "KO", "expired": str(will_expire_in), "domain": url}
+                output_strng = {
+                    "status": "KO",
+                    "expired": str(will_expire_in),
+                    "domain": url,
+                }
             elif will_expire_in < limit:
-                output_strng = {"status": "XX", "expired": str(will_expire_in), "domain": url}
+                output_strng = {
+                    "status": "XX",
+                    "expired": str(will_expire_in),
+                    "domain": url,
+                }
             else:
-                output_strng = {"status": "OK", "expired": str(will_expire_in), "domain": url}
+                output_strng = {
+                    "status": "OK",
+                    "expired": str(will_expire_in),
+                    "domain": url,
+                }
         self.l.info(f"{directive} return {output_strng}")
         return output_strng
 
@@ -72,7 +84,11 @@ class SSLVerify(Plugin):
             stat[data[directive]["status"]] = 1
             other = {}
             if data[directive]["status"] != "OK":
-                other = {data[directive]["domain"]: data[directive]['expired']}
+                other = {
+                    colored(data[directive]["domain"], "red"): colored(
+                        data[directive]["expired"], "red"
+                    )
+                }
             return stat, other
         except KeyError as e:
             self.l.error(str(e))

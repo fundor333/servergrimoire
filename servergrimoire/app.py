@@ -65,7 +65,6 @@ class GrimoirePage:
         """
         Launch command for plugin
         """
-        logger.info(f"Start run for {command} with url {url}")
         map_command = self.__get_directives_and_class()
         if command is None:
             command_to_run = self.__get_directives_str()
@@ -86,14 +85,12 @@ class GrimoirePage:
 
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
-            logger.info(f"End run for {command} with url {url}")
 
     def stats(self, command=None, url=None) -> None:
         """
         Launch stats command for plugin
         """
         init()
-        logger.info(f"Start stats for {command} with url {url}")
         map_command = self.__get_directives_and_class()
         if command is None:
             command_to_run = self.__get_directives_str()
@@ -111,7 +108,9 @@ class GrimoirePage:
             printable[command] = {}
             printable_error[command] = {}
             for url in url_to_run:
-                all, errors = map_command[command]().stats(command, self.data["server"][url])
+                all, errors = map_command[command]().stats(
+                    command, self.data["server"][url]
+                )
                 try:
                     printable_error[command].update(errors)
                 except AttributeError:
@@ -124,7 +123,7 @@ class GrimoirePage:
         for command in printable.keys():
             message = [(k, v) for k, v in printable[command].items()]
             try:
-                message_error = [(self.st.error(k), self.st.error(v)) for k, v in printable_error[command].items()]
+                message_error = [(k, v) for k, v in printable_error[command].items()]
             except AttributeError:
                 message_error = []
             head = [command, ""]
@@ -133,14 +132,12 @@ class GrimoirePage:
             if len(message_error) > 0:
                 print(tabulate(message_error, ["domain", "message"], tablefmt="pipe"))
             print()
-        logger.info(f"End stats for {command} with url {url}")
 
     def info(self, command=None, url=None) -> None:
         """
         Launch info command for plugin
         """
 
-        logger.info(f"Start info for {command} with url {url}")
         map_command = self.__get_directives_and_class()
         if command is None:
             command_to_run = self.__get_directives_str()
@@ -155,11 +152,12 @@ class GrimoirePage:
         for command in command_to_run:
             printable[command] = {}
             for url in url_to_run:
-                all = map_command[command]().info(directive=command, data=self.data["server"][url])
+                all = map_command[command]().info(
+                    directive=command, data=self.data["server"][url]
+                )
                 printable[command][url] = all
 
         pprint(printable)
-        logger.info(f"End info for {command} with url {url}")
 
     def add(self, url) -> bool:
         """
