@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from pathlib import Path
 
 from loguru import logger
@@ -22,6 +23,8 @@ class ConfigManager:
         self.__write_config__()
 
     def __preset__(self):
+        logger.remove()
+        logger.add(sys.stderr, level=self.logger_level)
         logger.debug(f"Data path {self.data_path}")
         self.config["data_path"] = f'{self.config["data_path"]}'
         logger.debug(f"Logger level is {self.logger_level}")

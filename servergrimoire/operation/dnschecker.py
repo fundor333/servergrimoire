@@ -23,7 +23,7 @@ class DNSChecker(Plugin):
             }
         else:
             flag = w.expiration_date >= (
-                    datetime.datetime.now() - datetime.timedelta(days=30)
+                datetime.datetime.now() - datetime.timedelta(days=30)
             )
 
             if flag:
@@ -47,5 +47,5 @@ class DNSChecker(Plugin):
         stat[data[directive]["status"]] = 1
         other = {}
         if data[directive]["status"] != "OK":
-            other = {data[directive]["domain"]: data[directive]['expired']}
+            other = {data[directive]["domain"]: data[directive]["expired"]}
         return stat, other
