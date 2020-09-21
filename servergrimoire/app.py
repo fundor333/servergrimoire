@@ -108,7 +108,9 @@ class GrimoirePage:
             printable[command] = {}
             printable_error[command] = {}
             for url in url_to_run:
-                all, errors = map_command[command]().stats(command, self.data["server"][url])
+                all, errors = map_command[command]().stats(
+                    command, self.data["server"][url]
+                )
                 try:
                     printable_error[command].update(errors)
                 except AttributeError:
@@ -150,7 +152,9 @@ class GrimoirePage:
         for command in command_to_run:
             printable[command] = {}
             for url in url_to_run:
-                all = map_command[command]().info(directive=command, data=self.data["server"][url])
+                all = map_command[command]().info(
+                    directive=command, data=self.data["server"][url]
+                )
                 printable[command][url] = all
 
         pprint(printable)

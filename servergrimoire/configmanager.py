@@ -24,7 +24,7 @@ class ConfigManager:
 
     def __preset__(self):
         logger.remove()
-        logger.add(sys.stderr,level=self.logger_level)
+        logger.add(sys.stderr, level=self.logger_level)
         logger.debug(f"Data path {self.data_path}")
         self.config["data_path"] = f'{self.config["data_path"]}'
         logger.debug(f"Logger level is {self.logger_level}")
