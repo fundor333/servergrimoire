@@ -47,5 +47,8 @@ class DNSChecker(Plugin):
         stat[data[directive]["status"]] = 1
         other = {}
         if data[directive]["status"] != "OK":
-            other = {data[directive]["domain"]: data[directive]["expired"]}
+            try:
+                other = {data[directive]["domain"]: data[directive]["expired"]}
+            except KeyError:
+                other={}
         return stat, other
