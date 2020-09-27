@@ -1,5 +1,6 @@
 import json
 import os
+import errno
 import sys
 from pathlib import Path
 
@@ -10,13 +11,20 @@ class ConfigManager:
     def __init__(self, path):
         self.config = {}
         if path is None:
-            path = Path.home() / ".servergrimoire_config"
-        self.path = path
+            self.path = Path.home() / ".servergrimoire/config"
+        else:
+            self.path = path
 
-        if not os.path.exists(path):
+        if not os.path.exists(self.path):
+            if not os.path.exists(os.path.dirname(self.path)):
+                try:
+                    os.makedirs(os.path.dirname(self.path))
+                except OSError as exc: # Guard against race condition
+                    if exc.errno != errno.EEXIST:
+                        raise
             self.__create_default__()
         else:
-            with open(path) as data_file:
+            with open(self.path) as data_file:
                 self.config = json.load(data_file)
         self.__preset__()
 
@@ -51,7 +59,7 @@ class ConfigManager:
     @data_path.getter
     def data_path(self):
         if self.config.get("data_path", None) is None:
-            self.config["data_path"] = Path.home() / ".servergrimoire_data"
+            self.config["data_path"] = Path.home() / ".servergrimoire/data"
         return self.config["data_path"]
 
     @property
