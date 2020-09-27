@@ -55,7 +55,7 @@ For now we have the following commands
 
 Server Grimoire has two file to work with:
 
-* A config file .servergrimoire_config
-* A data file .servergrimoire_data
+* A config file .servergrimoire/config
+* A data file .servergrimoire/data
 
 They are .json file if you want to edit them.
