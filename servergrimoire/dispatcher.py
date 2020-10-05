@@ -61,8 +61,8 @@ def add(ctx, u):
 @grimoire.command(help="Remove the url to the command check")
 @click.option("--u", "-url", help="Url to remove")
 @click.pass_context
-def remove(ctx, c, u):
-    ctx.obj.remove(c, u)
+def remove(ctx,  u):
+    ctx.obj.remove( u)
 
 
 @grimoire.command(help="Show the hello message")
