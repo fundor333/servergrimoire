@@ -3,6 +3,7 @@ from pprint import pprint
 from colorama import init
 from loguru import logger
 from tabulate import tabulate
+from multiprocessing.pool import ThreadPool
 
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
@@ -76,12 +77,13 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
+        pool = ThreadPool(processes=5)
         for url in url_to_run:
             for command in command_to_run:
                 cl = map_command[command]()
-                self.data["server"][url][command] = cl.execute(
-                    directive=command, data=self.data["server"][url]
-                )
+                async_result = pool.apply_async(cl.execute, (command, self.data["server"][url]))
+                return_val = async_result.get()
+                self.data["server"][url][command] = return_val
 
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
