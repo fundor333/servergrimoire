@@ -6,6 +6,7 @@ from servergrimoire.operation.sslverify import SSLVerify
 logger.remove()
 logger.add(sys.stdout, level="DEBUG")
 
+
 class PluginT:
     def get_plugin(self):
         if self.plugin:
@@ -21,6 +22,7 @@ class PluginT:
 
     def test_can_handle(self):
         commands = self.plugin.get_directives()
+        logger.info(commands)
         for com in commands:
             self.assertEqual(True, self.plugin.can_handle(com))
         self.assertNotEqual(True, self.plugin.can_handle("Pinocchio"))

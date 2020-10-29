@@ -3,6 +3,7 @@ from pprint import pprint
 from colorama import init
 from loguru import logger
 from tabulate import tabulate
+from multiprocessing.pool import ThreadPool
 
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
@@ -40,7 +41,9 @@ class GrimoirePage:
         return self.__get_directives_class().keys()
 
     def __get_directives_class(self) -> [Plugin]:
-        return [DNSChecker, DNSLookup, SSLVerify]
+        directive = [DNSChecker, DNSLookup, SSLVerify]
+        # TODO Add reader from folder
+        return directive
 
     def __get_directives_str(self) -> [str]:
         """
@@ -58,7 +61,7 @@ class GrimoirePage:
         """
         try:
             return self.data["server"].keys()
-        except:
+        except Exception:
             return []
 
     def run(self, command=None, url=None):
@@ -76,12 +79,15 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
+        pool = ThreadPool(processes=5)
         for url in url_to_run:
             for command in command_to_run:
                 cl = map_command[command]()
-                self.data["server"][url][command] = cl.execute(
-                    directive=command, data=self.data["server"][url]
+                async_result = pool.apply_async(
+                    cl.execute, (command, self.data["server"][url])
                 )
+                return_val = async_result.get()
+                self.data["server"][url][command] = return_val
 
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
@@ -116,21 +122,27 @@ class GrimoirePage:
                 except AttributeError:
                     printable_error[command] = errors
                 for key in all.keys():
-                    printable[command][key] = printable[command].get(key, 0) + int(
-                        all[key]
-                    )
+                    printable[command][key] = printable[command].get(
+                        key, 0
+                    ) + int(all[key])
 
         for command in printable.keys():
             message = [(k, v) for k, v in printable[command].items()]
             try:
-                message_error = [(k, v) for k, v in printable_error[command].items()]
+                message_error = [
+                    (k, v) for k, v in printable_error[command].items()
+                ]
             except AttributeError:
                 message_error = []
             head = [command, ""]
             if len(message) > 0:
                 print(tabulate(message, head, tablefmt="pipe"))
             if len(message_error) > 0:
-                print(tabulate(message_error, ["domain", "message"], tablefmt="pipe"))
+                print(
+                    tabulate(
+                        message_error, ["domain", "message"], tablefmt="pipe"
+                    )
+                )
             print()
 
     def info(self, command=None, url=None) -> None:

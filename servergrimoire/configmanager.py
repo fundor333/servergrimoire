@@ -19,7 +19,7 @@ class ConfigManager:
             if not os.path.exists(os.path.dirname(self.path)):
                 try:
                     os.makedirs(os.path.dirname(self.path))
-                except OSError as exc: # Guard against race condition
+                except OSError as exc:  # Guard against race condition
                     if exc.errno != errno.EEXIST:
                         raise
             self.__create_default__()
@@ -55,6 +55,7 @@ class ConfigManager:
     @data_path.setter
     def data_path(self, var):
         self.config["data_path"] = var
+        self.__write_config__()
 
     @data_path.getter
     def data_path(self):
@@ -72,6 +73,19 @@ class ConfigManager:
 
     @logger_level.getter
     def logger_level(self):
-        if self.config.get("logger_level", None) is None:
-            self.config["logger_level"] = "ERROR"
-        return self.config["logger_level"]
+        return self.config.get("logger_level", "ERROR")
+
+    @property
+    def folder_script(self):
+        return self.config["folder_script"]
+
+    @folder_script.setter
+    def folder_script(self, var):
+        self.config["folder_script"] = var
+        self.__write_config__()
+
+    @folder_script.getter
+    def folder_script(self):
+        return self.config.get(
+            "folder_script", Path.home() / ".servergrimoire/script/"
+        )

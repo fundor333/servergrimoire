@@ -22,7 +22,8 @@ class SSLVerify(Plugin):
 
         context = ssl.create_default_context()
         conn = context.wrap_socket(
-            socket.socket(socket.AF_INET), server_hostname=hostname,
+            socket.socket(socket.AF_INET),
+            server_hostname=hostname,
         )
 
         self.l.debug("Connect to {}".format(hostname))
@@ -38,21 +39,21 @@ class SSLVerify(Plugin):
         url = data["url"]
         try:
             will_expire_in = self.__ssl_valid_time_remaining(url)
-        except ResourceWarning as e:
+        except ResourceWarning:
             output_strng = broken_response(url)
-        except OSError as e:
+        except OSError:
             output_strng = broken_response(url)
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             output_strng = broken_response(url)
-        except socket.gaierror as e:
+        except socket.gaierror:
             output_strng = broken_response(url)
-        except ssl.CertificateError as e:
+        except ssl.CertificateError:
             output_strng = broken_response(url)
         except TimeoutError:
             output_strng = broken_response(url)
-        except ssl.SSLError as e:
+        except ssl.SSLError:
             output_strng = broken_response(url)
-        except socket.timeout as e:
+        except socket.timeout:
             output_strng = broken_response(url)
         else:
             if will_expire_in is None:
