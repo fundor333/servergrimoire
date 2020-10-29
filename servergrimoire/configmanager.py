@@ -35,13 +35,11 @@ class ConfigManager:
         logger.add(sys.stderr, level="ERROR")
         logger.add(sys.stdout, level=self.logger_level)
         logger.debug(f"Data path {self.data_path}")
-        self.config["data_path"] = f'{self.config["data_path"]}'
         logger.debug(f"Logger level is {self.logger_level}")
 
     def __write_config__(self):
         with open(Path(self.path), "w") as outfile:
             self.__preset__()
-            self.config["data_path"] = f'{self.config["data_path"]}'
             json.dump(self.config, outfile)
 
     def __create_default__(self) -> dict:
@@ -59,9 +57,9 @@ class ConfigManager:
 
     @data_path.getter
     def data_path(self):
-        if self.config.get("data_path", None) is None:
-            self.config["data_path"] = Path.home() / ".servergrimoire/data"
-        return self.config["data_path"]
+        return self.config.get(
+            "data_path", Path.home() / ".servergrimoire/data"
+        )
 
     @property
     def logger_level(self):
