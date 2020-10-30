@@ -10,6 +10,7 @@ test: ## Testing the app
 install: ## Install the env
 	poetry install
 	poetry run pre-commit install
+	poetry run pre-commit autoupdate
 
 .PHONY: update
 update: ## Update the dependency project
