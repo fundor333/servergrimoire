@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "servergrimoire"
-version = "1.2.1"
+version = "1.3.1"
 description = "Package for record and store info about servers and their stuffs"
 authors = ["Fundor333 <fundor333@fundor333.com>"]
 
@@ -34,7 +34,7 @@ colorama = "^0.4.3"
 [tool.poetry.dev-dependencies]
 pytest = "^4.6.11"
 pre-commit = "^2.7.1"
-black = { version = "19.10b0", allow-prereleases = true, python = "^3.8", markers = "platform_python_implementation == 'CPython'" }
+black = { version = "20.8b1", allow-prereleases = true, python = "^3.8", markers = "platform_python_implementation == 'CPython'" }
 
 [tool.poetry.plugins] # Optional super table
 
@@ -45,3 +45,19 @@ requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
 
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''

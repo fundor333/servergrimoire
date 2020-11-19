@@ -1,4 +1,4 @@
-from .dispatcher import grimoire
+from servergrimoire.dispatcher import grimoire
 
 
 def launcher():
