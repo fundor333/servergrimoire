@@ -50,5 +50,5 @@ class DNSChecker(Plugin):
             try:
                 other = {data[directive]["domain"]: data[directive]["expired"]}
             except KeyError:
-                other={}
+                other = {}
         return stat, other
