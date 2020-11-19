@@ -23,17 +23,19 @@ class DNSLookup(Plugin):
         output = {}
         for query, label in array_input:
             try:
-                output[label] = ""
+                output[label] = []
                 for rdata in dns.resolver.resolve(query, label):
-
-                    if output[label] == "":
-                        output[label] = f'"str(rdata)"'
-                    else:
-                        output[label] = f'{output[label]} , "{str(rdata)}"'
-            except:
+                    output[label].append(str(rdata))
+            except Exception:
                 output.pop(label)
                 self.l.info(f"Not found {label} for {domain}")
         return output
 
     def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
-        return dict(), dict()
+        stats = {}
+        self.l.debug(data[directive])
+        for e in data[directive]:
+            stats[e] = len(data[directive][e])
+        other = {}
+        self.l.debug(stats)
+        return stats, other

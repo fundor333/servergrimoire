@@ -22,20 +22,29 @@ class DNSChecker(Plugin):
                 "expiration": "Error trying to connect to socket",
             }
         else:
-            flag = w.expiration_date >= (
+            self.l.info(w)
+
+            if isinstance(w.expiration_date, list):
+                expiration_date = w.expiration_date[0]
+            else:
+                expiration_date = w.expiration_date
+
+            flag = expiration_date >= (
                 datetime.datetime.now() - datetime.timedelta(days=30)
             )
+
+            self.l.info(flag)
 
             if flag:
                 output_strng = {
                     "status": "OK",
-                    "creation": f"{w.creation_date}",
+                    "creation": f"{expiration_date}",
                     "expiration": f"{w.expiration_date}",
                 }
             else:
                 output_strng = {
                     "status": "XX",
-                    "creation": f"{w.creation_date}",
+                    "creation": f"{expiration_date}",
                     "expiration": f"{w.expiration_date}",
                 }
 
