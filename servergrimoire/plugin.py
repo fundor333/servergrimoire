@@ -1,3 +1,5 @@
+from typing import List
+
 from loguru import logger
 
 
@@ -7,7 +9,14 @@ class Plugin(object):
     """
 
     def __init__(self):
-        self.l = logger.bind(task=type(self).__name__)
+        self.logger = logger.bind(task=type(self).__name__)
+
+    @staticmethod
+    def get_directives() -> List[str]:
+        """
+        Returns the directives.
+        """
+        raise NotImplementedError
 
     def can_handle(self, directive: str) -> bool:
         """
@@ -21,7 +30,7 @@ class Plugin(object):
         """
         raise NotImplementedError
 
-    def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
+    def stats(self, directive: str, data: dict) -> List[dict]:
         """
         Return the stats for the directive
         """

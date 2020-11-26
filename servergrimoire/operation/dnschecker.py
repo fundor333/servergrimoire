@@ -1,4 +1,5 @@
 import datetime
+from typing import Tuple
 
 import whois
 
@@ -22,7 +23,7 @@ class DNSChecker(Plugin):
                 "expiration": "Error trying to connect to socket",
             }
         else:
-            self.l.info(w)
+            self.logger.info(w)
 
             if isinstance(w.expiration_date, list):
                 expiration_date = w.expiration_date[0]
@@ -33,7 +34,7 @@ class DNSChecker(Plugin):
                 datetime.datetime.now() - datetime.timedelta(days=30)
             )
 
-            self.l.info(flag)
+            self.logger.info(flag)
 
             if flag:
                 output_strng = {
@@ -48,11 +49,11 @@ class DNSChecker(Plugin):
                     "expiration": f"{w.expiration_date}",
                 }
 
-        self.l.info(output_strng)
+        self.logger.info(output_strng)
         return output_strng
 
-    def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
-        stat = {"OK": 0, "KO": 0, "XX": 0}
+    def stats(self, directive: str, data: dict) -> Tuple[dict, dict]:
+        stat: dict = {"OK": 0, "KO": 0, "XX": 0}
         stat[data[directive]["status"]] = 1
         other = {}
         if data[directive]["status"] != "OK":

@@ -28,14 +28,14 @@ class DNSLookup(Plugin):
                     output[label].append(str(rdata))
             except Exception:
                 output.pop(label)
-                self.l.info(f"Not found {label} for {domain}")
+                self.logger.info(f"Not found {label} for {domain}")
         return output
 
     def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
         stats = {}
-        self.l.debug(data[directive])
+        self.logger.debug(data[directive])
         for e in data[directive]:
             stats[e] = len(data[directive][e])
         other = {}
-        self.l.debug(stats)
+        self.logger.debug(stats)
         return stats, other
