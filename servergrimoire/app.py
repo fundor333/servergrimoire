@@ -2,10 +2,10 @@ import json
 from pprint import pprint
 from typing import List
 
+from alive_progress import alive_bar
 from colorama import init  # type: ignore
 from loguru import logger
 from tabulate import tabulate
-from tqdm import tqdm
 
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
@@ -81,14 +81,17 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
-        pbar = tqdm(total=(len(url_to_run) * len(command_to_run)))
-        for url in url_to_run:
-            for command in command_to_run:
-                return_val = map_command[command]().execute(
-                    command, self.data["server"][url]
-                )
-                self.data["server"][url][command] = return_val
-                pbar.update(1)
+        with alive_bar(
+            (len(url_to_run) * len(command_to_run)), bar="filling"
+        ) as bar:
+
+            for url in url_to_run:
+                for command in command_to_run:
+                    return_val = map_command[command]().execute(
+                        command, self.data["server"][url]
+                    )
+                    self.data["server"][url][command] = return_val
+                    bar()
 
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
