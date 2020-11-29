@@ -5,15 +5,13 @@ from typing import List
 from colorama import init  # type: ignore
 from loguru import logger
 from tabulate import tabulate
-from multiprocessing.pool import ThreadPool
+from tqdm import tqdm
 
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
 from servergrimoire.operation.dnslookup import DNSLookup
 from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.plugin import Plugin
-
-from tqdm import tqdm
 
 
 class GrimoirePage:
@@ -83,15 +81,14 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
-        pool = ThreadPool(processes=5)
-        for url in tqdm(url_to_run):
+        pbar = tqdm(total=(len(url_to_run) * len(command_to_run)))
+        for url in url_to_run:
             for command in command_to_run:
-                cl = map_command[command]()
-                async_result = pool.apply_async(
-                    cl.execute, (command, self.data["server"][url])
+                return_val = map_command[command]().execute(
+                    command, self.data["server"][url]
                 )
-                return_val = async_result.get()
                 self.data["server"][url][command] = return_val
+                pbar.update(1)
 
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
@@ -114,7 +111,7 @@ class GrimoirePage:
         printable: dict = {}
         printable_error: dict = {}
 
-        for command in tqdm(command_to_run):
+        for command in command_to_run:
             printable[command] = {}
             printable_error[command] = {}
             for url in url_to_run:
@@ -156,22 +153,19 @@ class GrimoirePage:
 
         map_command = self.__get_directives_and_class()
         if command is None:
-            command_to_run = self.__get_directives_str()
-        else:
-            command_to_run = [command]
+            command = self.__get_directives_str()
         if url is None:
             url_to_run = self.__get_urls_all()
         else:
             url_to_run = [url]
 
         printable: dict = {}
-        for command in tqdm(command_to_run):
-            printable[command] = {}
-            for url in url_to_run:
-                all = map_command[command]().info(
-                    directive=command, data=self.data["server"][url]
-                )
-                printable[command][url] = all
+        printable[command] = {}
+        for url in url_to_run:
+            all = map_command[command]().info(
+                directive=command, data=self.data["server"][url]
+            )
+            printable[command][url] = all
 
         pprint(printable)
 
@@ -179,7 +173,7 @@ class GrimoirePage:
         """
         Add command for url
         """
-        for e in tqdm(url):
+        for e in url:
             if self.data.get("server") is None:
                 self.data["server"] = {}
             if self.data["server"].get(e) is None:
