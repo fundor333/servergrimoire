@@ -1,6 +1,8 @@
 import json
 from pprint import pprint
-from colorama import init
+from typing import List
+
+from colorama import init  # type: ignore
 from loguru import logger
 from tabulate import tabulate
 from multiprocessing.pool import ThreadPool
@@ -10,6 +12,8 @@ from servergrimoire.operation.dnschecker import DNSChecker
 from servergrimoire.operation.dnslookup import DNSLookup
 from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.plugin import Plugin
+
+from tqdm import tqdm
 
 
 class GrimoirePage:
@@ -40,12 +44,12 @@ class GrimoirePage:
         """
         return self.__get_directives_class().keys()
 
-    def __get_directives_class(self) -> [Plugin]:
+    def __get_directives_class(self) -> List[Plugin]:
         directive = [DNSChecker, DNSLookup, SSLVerify]
         # TODO Add reader from folder
         return directive
 
-    def __get_directives_str(self) -> [str]:
+    def __get_directives_str(self) -> List[str]:
         """
         Return all directive into a array
         """
@@ -55,7 +59,7 @@ class GrimoirePage:
                 arr_directives.append(e)
         return arr_directives
 
-    def __get_urls_all(self) -> [str]:
+    def __get_urls_all(self) -> List[str]:
         """
         Return all urls into a array
         """
@@ -80,7 +84,7 @@ class GrimoirePage:
             url_to_run = [url]
 
         pool = ThreadPool(processes=5)
-        for url in url_to_run:
+        for url in tqdm(url_to_run):
             for command in command_to_run:
                 cl = map_command[command]()
                 async_result = pool.apply_async(
@@ -107,10 +111,10 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
-        printable = {}
-        printable_error = {}
+        printable: dict = {}
+        printable_error: dict = {}
 
-        for command in command_to_run:
+        for command in tqdm(command_to_run):
             printable[command] = {}
             printable_error[command] = {}
             for url in url_to_run:
@@ -160,8 +164,8 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
-        printable = {}
-        for command in command_to_run:
+        printable: dict = {}
+        for command in tqdm(command_to_run):
             printable[command] = {}
             for url in url_to_run:
                 all = map_command[command]().info(
@@ -175,7 +179,7 @@ class GrimoirePage:
         """
         Add command for url
         """
-        for e in url:
+        for e in tqdm(url):
             if self.data.get("server") is None:
                 self.data["server"] = {}
             if self.data["server"].get(e) is None:
@@ -183,6 +187,7 @@ class GrimoirePage:
                 logger.info(f"Adding {url}")
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
+        return True
 
     def remove(self, url=None) -> bool:
         """
@@ -192,3 +197,4 @@ class GrimoirePage:
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
         logger.info(f"Removing {url}")
+        return True

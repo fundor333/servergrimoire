@@ -26,10 +26,11 @@ class SSLVerify(Plugin):
             server_hostname=hostname,
         )
 
-        self.l.debug("Connect to {}".format(hostname))
+        self.logger.debug("Connect to {}".format(hostname))
         conn.connect((hostname, 443))
         ssl_info = conn.getpeercert()
         # parse the string from the certificate into a Python datetime object
+        self.logger.info(ssl_info)
         return datetime.datetime.strptime(ssl_info["notAfter"], ssl_date_fmt)
 
     def execute(self, directive: str, data: dict) -> dict:
@@ -76,7 +77,7 @@ class SSLVerify(Plugin):
                     "expired": str(will_expire_in),
                     "domain": url,
                 }
-        self.l.info(f"{directive} return {output_strng}")
+        self.logger.info(f"{directive} return {output_strng}")
         return output_strng
 
     def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
@@ -92,5 +93,5 @@ class SSLVerify(Plugin):
                 }
             return stat, other
         except KeyError as e:
-            self.l.error(str(e))
+            self.logger.error(str(e))
             return {}, {}
