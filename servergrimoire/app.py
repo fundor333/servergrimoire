@@ -81,12 +81,14 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
-        for url in tqdm(url_to_run):
-            for command in tqdm(command_to_run):
+        pbar = tqdm(total=(len(url_to_run) * len(command_to_run)))
+        for url in url_to_run:
+            for command in command_to_run:
                 return_val = map_command[command]().execute(
                     command, self.data["server"][url]
                 )
                 self.data["server"][url][command] = return_val
+                pbar.update(1)
 
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
