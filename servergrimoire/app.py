@@ -13,6 +13,8 @@ from servergrimoire.operation.dnslookup import DNSLookup
 from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.plugin import Plugin
 
+from tqdm import tqdm
+
 
 class GrimoirePage:
     def __init__(self, path):
@@ -82,7 +84,7 @@ class GrimoirePage:
             url_to_run = [url]
 
         pool = ThreadPool(processes=5)
-        for url in url_to_run:
+        for url in tqdm(url_to_run):
             for command in command_to_run:
                 cl = map_command[command]()
                 async_result = pool.apply_async(
@@ -112,7 +114,7 @@ class GrimoirePage:
         printable: dict = {}
         printable_error: dict = {}
 
-        for command in command_to_run:
+        for command in tqdm(command_to_run):
             printable[command] = {}
             printable_error[command] = {}
             for url in url_to_run:
@@ -163,7 +165,7 @@ class GrimoirePage:
             url_to_run = [url]
 
         printable: dict = {}
-        for command in command_to_run:
+        for command in tqdm(command_to_run):
             printable[command] = {}
             for url in url_to_run:
                 all = map_command[command]().info(
@@ -177,7 +179,7 @@ class GrimoirePage:
         """
         Add command for url
         """
-        for e in url:
+        for e in tqdm(url):
             if self.data.get("server") is None:
                 self.data["server"] = {}
             if self.data["server"].get(e) is None:
