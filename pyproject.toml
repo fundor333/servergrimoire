@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "servergrimoire"
-version = "1.3.6"
+version = "1.3.7"
 description = "Package for record and store info about servers and their stuffs"
 authors = ["Fundor333 <fundor333@fundor333.com>"]
 
@@ -43,11 +43,6 @@ mypy = "^0.790"
 
 [tool.poetry.plugins."console_scripts"]
 "servergrimoire" = "servergrimoire.__main__:launcher"
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-
-
 [tool.black]
 line-length = 79
 include = '\.pyi?$'
@@ -64,3 +59,8 @@ exclude = '''
   | dist
 )/
 '''
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+
