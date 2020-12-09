@@ -11,7 +11,7 @@ class ConfigManager:
     def __init__(self, path):
         self.config = {}
         if path is None:
-            self.path = Path.home() / ".servergrimoire/config"
+            self.path = Path.home() / ".servergrimoire/config.json"
         else:
             self.path = path
 
@@ -62,7 +62,7 @@ class ConfigManager:
     @data_path.getter
     def data_path(self):
         return self.config.get(
-            "data_path", Path.home() / ".servergrimoire/data"
+            "data_path", Path.home() / ".servergrimoire/data.json"
         )
 
     @property
