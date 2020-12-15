@@ -59,7 +59,7 @@ class SSLVerify(Plugin):
         else:
             if will_expire_in is None:
                 output_strng = broken_response(url)
-            elif will_expire_in < limit:
+            elif will_expire_in < datetime.datetime.now():
                 output_strng = {
                     "status": "KO",
                     "expired": str(will_expire_in),
@@ -85,10 +85,16 @@ class SSLVerify(Plugin):
             stat = {"OK": 0, "KO": 0, "XX": 0}
             stat[data[directive]["status"]] = 1
             other = {}
-            if data[directive]["status"] != "OK":
+            if data[directive]["status"] == "KO":
                 other = {
                     colored(data[directive]["domain"], "red"): colored(
                         data[directive]["expired"], "red"
+                    )
+                }
+            elif data[directive]["status"] == "XX":
+                other = {
+                    colored(data[directive]["domain"], "orange"): colored(
+                        data[directive]["expired"], "orange"
                     )
                 }
             return stat, other
