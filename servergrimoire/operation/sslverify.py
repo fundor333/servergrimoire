@@ -57,6 +57,9 @@ class SSLVerify(Plugin):
         except socket.timeout:
             output_strng = broken_response(url)
         else:
+            self.logger.info(
+                f"will_expire {will_expire_in}, limit {limit}, today {datetime.datetime.now()}"
+            )
             if will_expire_in is None:
                 output_strng = broken_response(url)
             elif will_expire_in < datetime.datetime.now():
@@ -93,8 +96,8 @@ class SSLVerify(Plugin):
                 }
             elif data[directive]["status"] == "XX":
                 other = {
-                    colored(data[directive]["domain"], "orange"): colored(
-                        data[directive]["expired"], "orange"
+                    colored(data[directive]["domain"], "yellow"): colored(
+                        data[directive]["expired"], "yellow"
                     )
                 }
             return stat, other
