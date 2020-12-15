@@ -37,9 +37,7 @@ class ConfigManager:
         logger.debug(f"Data path {self.data_path}")
         logger.debug(f"Logger level is {self.logger_level}")
 
-        self.config["data_path"] = str(self.data_path)
         self.config["logger_level"] = str(self.logger_level)
-        self.config["folder_script"] = str(self.folder_script)
 
     def __write_config__(self):
         with open(Path(self.path), "w") as outfile:
