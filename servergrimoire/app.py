@@ -140,14 +140,15 @@ class GrimoirePage:
                 message_error = []
             head = [command, ""]
             if len(message) > 0:
+                print("\n")
                 print(tabulate(message, head, tablefmt="pipe"))
             if len(message_error) > 0:
+                print("\n")
                 print(
                     tabulate(
                         message_error, ["domain", "message"], tablefmt="pipe"
                     )
                 )
-            print()
 
     def info(self, command=None, url=None) -> None:
         """
