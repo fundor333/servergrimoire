@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "servergrimoire"
-version = "1.5.2"
+version = "1.5.3"
 description = "Package for record and store info about servers and their stuffs"
 authors = ["Fundor333 <fundor333@fundor333.com>"]
 
