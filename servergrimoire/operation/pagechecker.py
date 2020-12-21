@@ -2,6 +2,7 @@ from typing import Tuple
 
 import requests
 import whois
+from termcolor import colored
 
 from servergrimoire.plugin import Plugin
 
@@ -25,7 +26,7 @@ class PageChecker(Plugin):
         else:
             self.logger.info(w)
             output_strng = {
-                "status": requests.get(url).status_code,
+                "status": requests.head(url).status_code,
                 "url": url,
             }
         self.logger.info(output_strng)
@@ -37,8 +38,21 @@ class PageChecker(Plugin):
             stat[str(data[directive]["status"])] = 1
             other = {}
             if not (200 <= data[directive]["status"] < 400):
+                status = data[directive]["status"]
                 try:
-                    other = {data[directive]["url"]: data[directive]["status"]}
+                    if 300 <= status < 400:
+                        color = "blue"
+                    elif 400 <= status < 500:
+                        color = "yellow"
+                    elif 500 <= status < 600:
+                        color = "red"
+                    else:
+                        color = "cyan"
+                    other = {
+                        colored(data[directive]["url"], color): colored(
+                            data[directive]["status"], color
+                        )
+                    }
                 except KeyError:
                     other = {}
             return stat, other
