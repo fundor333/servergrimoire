@@ -17,16 +17,20 @@ class PageChecker(Plugin):
 
     def execute(self, directive: str, data: dict) -> dict:
         w = whois.whois(data["url"])
-        if "http" not in data["url"]:
-            url = f"http://{data['url']}"
-        else:
-            url = data["url"]
+        try:
+            if "https" not in data["url"]:
+                url = f"https://{data['url']}"
+            else:
+                url = data["url"]
+        except requests.exceptions.SSLError:
+            if "http" not in data["url"]:
+                url = f"http://{data['url']}"
         if w["domain_name"] is None:
             output_strng = {"status": 408, "url": url}
         else:
             self.logger.info(w)
             output_strng = {
-                "status": requests.head(url).status_code,
+                "status": requests.head(url, allow_redirects=True).status_code,
                 "url": url,
             }
         self.logger.info(output_strng)
