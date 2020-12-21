@@ -39,7 +39,7 @@ class PageChecker(Plugin):
         try:
             stat[str(data[directive]["status"])] = 1
             other = {}
-            if not (200 <= data[directive]["status"] < 400):
+            if not (200 <= data[directive]["status"] < 300):
                 status = data[directive]["status"]
                 try:
                     if 300 <= status < 400:
