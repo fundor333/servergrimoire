@@ -3,9 +3,18 @@ from typing import Tuple, List
 import requests
 import whois
 from termcolor import colored
-from urllib3.exceptions import NewConnectionError
+from requests.packages.urllib3.util import Retry
+from requests.adapters import HTTPAdapter
+from requests import Session
 
 from servergrimoire.plugin import Plugin
+
+TIMEOUT = 5
+s = Session()
+retries = Retry(total=3, backoff_factor=0)
+adapter = HTTPAdapter(max_retries=retries)
+s.mount("https://", adapter)
+s.mount("http://", adapter)
 
 
 class PageChecker(Plugin):
@@ -24,15 +33,15 @@ class PageChecker(Plugin):
                     url = f"https://{data['url']}"
                 else:
                     url = data["url"]
-                status_code = requests.head(
-                    url, allow_redirects=True
+                status_code = s.head(
+                    url, allow_redirects=True, timeout=TIMEOUT
                 ).status_code
             except requests.exceptions.SSLError:
                 url = f"http://{data['url']}"
-                status_code = requests.head(
-                    url, allow_redirects=True
+                status_code = s.head(
+                    url, allow_redirects=True, timeout=TIMEOUT
                 ).status_code
-        except NewConnectionError:
+        except requests.exceptions.ConnectTimeout:
             status_code = 408
 
         self.logger.info(w)
