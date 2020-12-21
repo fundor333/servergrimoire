@@ -3,6 +3,7 @@ from typing import Tuple, List
 import requests
 import whois
 from termcolor import colored
+from urllib3.exceptions import NewConnectionError
 
 from servergrimoire.plugin import Plugin
 
@@ -18,14 +19,22 @@ class PageChecker(Plugin):
     def execute(self, directive: str, data: dict) -> dict:
         w = whois.whois(data["url"])
         try:
-            if "https" not in data["url"]:
-                url = f"https://{data['url']}"
-            else:
-                url = data["url"]
-            status_code = requests.head(url, allow_redirects=True).status_code
-        except requests.exceptions.SSLError:
-            url = f"http://{data['url']}"
-            status_code = requests.head(url, allow_redirects=True).status_code
+            try:
+                if "https" not in data["url"]:
+                    url = f"https://{data['url']}"
+                else:
+                    url = data["url"]
+                status_code = requests.head(
+                    url, allow_redirects=True
+                ).status_code
+            except requests.exceptions.SSLError:
+                url = f"http://{data['url']}"
+                status_code = requests.head(
+                    url, allow_redirects=True
+                ).status_code
+        except NewConnectionError:
+            status_code = 408
+
         self.logger.info(w)
         output_strng = {
             "status": status_code,
