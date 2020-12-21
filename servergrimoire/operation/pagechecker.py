@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import requests
 import whois
@@ -12,7 +12,7 @@ class PageChecker(Plugin):
         return directive == "p"
 
     @staticmethod
-    def get_directives() -> [str]:
+    def get_directives() -> List[str]:
         return ["page_checker"]
 
     def execute(self, directive: str, data: dict) -> dict:
@@ -22,17 +22,15 @@ class PageChecker(Plugin):
                 url = f"https://{data['url']}"
             else:
                 url = data["url"]
+            status_code = requests.head(url, allow_redirects=True).status_code
         except requests.exceptions.SSLError:
-            if "http" not in data["url"]:
-                url = f"http://{data['url']}"
-        if w["domain_name"] is None:
-            output_strng = {"status": 408, "url": url}
-        else:
-            self.logger.info(w)
-            output_strng = {
-                "status": requests.head(url, allow_redirects=True).status_code,
-                "url": url,
-            }
+            url = f"http://{data['url']}"
+            status_code = requests.head(url, allow_redirects=True).status_code
+        self.logger.info(w)
+        output_strng = {
+            "status": status_code,
+            "url": url,
+        }
         self.logger.info(output_strng)
         return output_strng
 
