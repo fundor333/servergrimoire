@@ -36,12 +36,7 @@ class PageChecker(Plugin):
         try:
             stat[str(data[directive]["status"])] = 1
             other = {}
-            self.logger.error(data[directive])
-            self.logger.error(
-                {data[directive]["url"]: data[directive]["status"]}
-            )
-
-            if 200 <= data[directive]["status"] < 400:
+            if not (200 <= data[directive]["status"] < 400):
                 try:
                     other = {data[directive]["url"]: data[directive]["status"]}
                 except KeyError:
