@@ -41,10 +41,12 @@ class PageChecker(Plugin):
                 status_code = s.head(
                     url, allow_redirects=True, timeout=TIMEOUT
                 ).status_code
+            self.logger.info(w)
         except requests.exceptions.ConnectTimeout:
             status_code = 408
+        except Exception:
+            status_code = 400
 
-        self.logger.info(w)
         output_strng = {
             "status": status_code,
             "url": url,
