@@ -5,15 +5,16 @@ from typing import List
 from rich import box, print
 from rich.columns import Columns, Console
 from rich.logging import RichHandler
+from rich.panel import Panel
 from rich.progress import Progress
 from rich.table import Table
+
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
 from servergrimoire.operation.dnslookup import DNSLookup
 from servergrimoire.operation.pagechecker import PageChecker
 from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.plugin import Plugin
-from rich.panel import Panel
 
 console = Console()
 
