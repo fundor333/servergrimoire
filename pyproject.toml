@@ -33,6 +33,7 @@ pytest = "^6.2.1"
 pre-commit = "^2.7.1"
 black = { version = "20.8b1", allow-prereleases = true, python = "^3.8", markers = "platform_python_implementation == 'CPython'" }
 mypy = "^0.790"
+Sphinx = "^3.4.3"
 
 [tool.poetry.plugins] # Optional super table
 
