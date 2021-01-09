@@ -1,9 +1,3 @@
-# You can set these variables from the command line.
-SPHINXOPTS    ?=
-SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = source
-BUILDDIR      = build
-
 .PHONY: help
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -22,14 +16,8 @@ install: ## Install the env
 update: ## Update the dependency project
 	poetry update
 
-view:
-	open build/html/index.html
+html:  ## Build documentation
+	poetry run mkdocs build --clean
 
-clean: ## Clean Sphinx output
-	-rm -rf $(BUILDDIR)/*
-
-html: clean ## Build documentation
-	poetry run $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
-publish: test html
+publish: test html ## Testing and publish the paackage
 	poetry publish --build

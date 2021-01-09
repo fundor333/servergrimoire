@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "servergrimoire"
-version = "1.7.3"
+version = "1.7.4"
 description = "Package for record and store info about servers and their stuffs"
 authors = ["Fundor333 <fundor333@fundor333.com>"]
 
@@ -33,7 +33,7 @@ pytest = "^6.2.1"
 pre-commit = "^2.7.1"
 black = { version = "20.8b1", allow-prereleases = true, python = "^3.8", markers = "platform_python_implementation == 'CPython'" }
 mypy = "^0.790"
-Sphinx = "^3.4.3"
+mkdocs = "^1.1.2"
 
 [tool.poetry.plugins] # Optional super table
 
