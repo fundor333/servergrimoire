@@ -2,7 +2,6 @@ from typing import Tuple, List
 
 import requests
 import whois
-from termcolor import colored
 from requests.packages.urllib3.util import Retry
 from requests.adapters import HTTPAdapter
 from requests import Session
@@ -71,9 +70,7 @@ class PageChecker(Plugin):
                     else:
                         color = "cyan"
                     other = {
-                        colored(data[directive]["url"], color): colored(
-                            data[directive]["status"], color
-                        )
+                        f"[{color}]{data[directive]['url']}": f"[{color}]{data[directive]['status']}"
                     }
                 except KeyError:
                     other = {}

@@ -1,10 +1,14 @@
-import sys
-from loguru import logger
 from unittest.case import TestCase
 from servergrimoire.operation.sslverify import SSLVerify
+import logging
+from rich.logging import RichHandler
 
-logger.remove()
-logger.add(sys.stdout, level="DEBUG")
+FORMAT = "%(message)s"
+logging.basicConfig(
+    level="DEBUG", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
+)
+
+logger = logging.getLogger("rich")
 
 
 class PluginT:

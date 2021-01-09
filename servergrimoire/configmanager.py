@@ -1,10 +1,10 @@
 import json
 import os
 import errno
-import sys
 from pathlib import Path
 
-from loguru import logger
+import logging
+from rich.logging import RichHandler
 
 
 class ConfigManager:
@@ -31,9 +31,15 @@ class ConfigManager:
         self.__write_config__()
 
     def __preset__(self):
-        logger.remove()
-        logger.add(sys.stderr, level="ERROR")
-        logger.add(sys.stdout, level=self.logger_level)
+        FORMAT = "%(message)s"
+        logging.basicConfig(
+            level=self.logger_level,
+            format=FORMAT,
+            datefmt="[%X]",
+            handlers=[RichHandler()],
+        )
+
+        logger = logging.getLogger("rich")
         logger.debug(f"Data path {self.data_path}")
         logger.debug(f"Logger level is {self.logger_level}")
 
