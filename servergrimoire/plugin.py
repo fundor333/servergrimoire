@@ -1,6 +1,6 @@
 from typing import List
-
-from loguru import logger
+import logging
+from rich.logging import RichHandler
 
 
 class Plugin(object):
@@ -9,7 +9,16 @@ class Plugin(object):
     """
 
     def __init__(self):
-        self.logger = logger.bind(task=type(self).__name__)
+
+        FORMAT = "%(message)s"
+        logging.basicConfig(
+            level="NOTSET",
+            format=FORMAT,
+            datefmt="[%X]",
+            handlers=[RichHandler()],
+        )
+
+        self.logger = logging.getLogger("rich")
 
     @staticmethod
     def get_directives() -> List[str]:

@@ -1,18 +1,19 @@
 import json
 from pprint import pprint
 from typing import List
-
-from alive_progress import alive_bar
-from colorama import init  # type: ignore
-from loguru import logger
-from tabulate import tabulate
-
+import logging
+from rich.logging import RichHandler
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
 from servergrimoire.operation.dnslookup import DNSLookup
 from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.operation.pagechecker import PageChecker
 from servergrimoire.plugin import Plugin
+from rich.console import Console
+from rich.table import Table
+from rich.progress import Progress
+
+console = Console()
 
 
 class GrimoirePage:
@@ -26,6 +27,16 @@ class GrimoirePage:
             with open(self.setting_manager.data_path, "w") as f:
                 json.dump({}, f)
             self.data = {}
+
+        FORMAT = "%(message)s"
+        logging.basicConfig(
+            level=self.setting_manager.logger_level,
+            format=FORMAT,
+            datefmt="[%X]",
+            handlers=[RichHandler()],
+        )
+
+        self.logger = logging.getLogger("rich")
 
     def __get_directives_and_class(self) -> dict:
         """
@@ -82,9 +93,12 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
-        with alive_bar(
-            (len(url_to_run) * len(command_to_run)), bar="filling"
-        ) as bar:
+        with Progress() as progress:
+            tasks = {}
+            for command in command_to_run:
+                tasks[command] = progress.add_task(
+                    "[cyan]Working...", total=(len(url_to_run))
+                )
 
             for url in url_to_run:
                 for command in command_to_run:
@@ -92,7 +106,7 @@ class GrimoirePage:
                         command, self.data["server"][url]
                     )
                     self.data["server"][url][command] = return_val
-                    bar()
+                    progress.update(tasks[command], advance=1)
 
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
@@ -101,7 +115,6 @@ class GrimoirePage:
         """
         Launch stats command for plugin
         """
-        init()
         map_command = self.__get_directives_and_class()
         if command is None:
             command_to_run = self.__get_directives_str()
@@ -132,24 +145,27 @@ class GrimoirePage:
                     ) + int(all[key])
 
         for command in printable.keys():
-            message = [(k, v) for k, v in printable[command].items()]
+            message = [[k, v] for k, v in printable[command].items()]
             try:
                 message_error = [
-                    (k, v) for k, v in printable_error[command].items()
+                    [k, v] for k, v in printable_error[command].items()
                 ]
             except AttributeError:
                 message_error = []
-            head = [command, ""]
             if len(message) > 0:
-                print("\n")
-                print(tabulate(message, head, tablefmt="pipe"))
+                table = Table(show_footer=False)
+                table.add_column()
+                table.add_column()
+                for a, b in message:
+                    table.add_row(a, str(b))
+                console.print(table)
             if len(message_error) > 0:
-                print("\n")
-                print(
-                    tabulate(
-                        message_error, ["domain", "message"], tablefmt="pipe"
-                    )
-                )
+                table = Table(show_footer=False)
+                table.add_column()
+                table.add_column()
+                for a, b in message_error:
+                    table.add_row(a, b)
+                console.print(table)
 
     def info(self, command=None, url=None) -> None:
         """
@@ -183,7 +199,7 @@ class GrimoirePage:
                 self.data["server"] = {}
             if self.data["server"].get(e) is None:
                 self.data["server"][e] = {"url": e}
-                logger.info(f"Adding {url}")
+                self.logger.info(f"Adding {url}")
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
         return True
@@ -195,5 +211,5 @@ class GrimoirePage:
         self.data["server"].pop(url, None)
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
-        logger.info(f"Removing {url}")
+        self.logger.info(f"Removing {url}")
         return True
