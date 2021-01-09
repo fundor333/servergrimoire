@@ -16,3 +16,8 @@ install: ## Install the env
 update: ## Update the dependency project
 	poetry update
 
+html:  ## Build documentation
+	poetry run mkdocs build --clean
+
+publish: test html ## Testing and publish the paackage
+	poetry publish --build

@@ -50,22 +50,29 @@ class PluginT:
             plugin.stats(directive, data)
         except NotImplementedError:
             self.fail("stats() raised NotImplementedError unexpectedly!")
-        try:
-            plugin.info(directive, data)
-        except NotImplementedError:
-            self.fail("info() raised NotImplementedError unexpectedly!")
 
 
 class SSLVerifyTest(TestCase, PluginT):
     def setUp(self):
         self.plugin = SSLVerify()
         self.data = {
-            "url": "fundor333.com",
+            "dns_checker": {
+                "status": "OK",
+                "creation": "2021-12-15 20:45:08",
+                "expiration": "2021-12-15 20:45:08",
+            },
+            "dns_lookup": {},
+            "page_checker": {
+                "status": 200,
+                "url": "https://www.fundor333.com",
+            },
             "ssl_check": {
                 "status": "KO",
                 "expired": "expiration date",
                 "domain": "google.com",
+                "organization_name": "GTS CA 1D2",
             },
+            "url": "www.fundor333.com",
         }
 
     def status_test(self):
