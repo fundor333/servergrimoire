@@ -1,6 +1,8 @@
-from typing import List
+from typing import List, Tuple
 import logging
 from rich.logging import RichHandler
+from rich.console import Console
+from rich.markdown import Markdown
 
 
 class Plugin(object):
@@ -39,14 +41,36 @@ class Plugin(object):
         """
         raise NotImplementedError
 
-    def stats(self, directive: str, data: dict) -> List[dict]:
+    def stats(
+        self, directive: str, data: dict
+    ) -> Tuple[List[List], List[List]]:
         """
         Return the stats for the directive
         """
         raise NotImplementedError
 
-    def info(self, directive: str, data: dict):
+    def get_markdown(self):
+        """
+        Return info text as Markdown
+        """
+        raise NotImplementedError
+
+    def info(self):
         """
         Return info of the directive
         """
-        return data.get(directive, dict())
+        console = Console()
+        md = Markdown(self.get_markdown())
+        console.print(md)
+
+    def header_stats(self) -> List[str]:
+        raise NotImplementedError
+
+    def header_error(self) -> List[str]:
+        raise NotImplementedError
+
+    def title_stats(self) -> str:
+        raise NotImplementedError
+
+    def title_error(self) -> str:
+        raise NotImplementedError
