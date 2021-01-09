@@ -1,17 +1,19 @@
 import json
-from typing import List
 import logging
+from typing import List
+
+from rich import box, print
+from rich.columns import Columns, Console
 from rich.logging import RichHandler
+from rich.progress import Progress
+from rich.table import Table
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
 from servergrimoire.operation.dnslookup import DNSLookup
-from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.operation.pagechecker import PageChecker
+from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.plugin import Plugin
-from rich.console import Console
-from rich.table import Table
-from rich.progress import Progress
-from rich import box
+from rich.panel import Panel
 
 console = Console()
 
@@ -132,21 +134,25 @@ class GrimoirePage:
             }
             plugin = map_command[command]()
             stats, errors = plugin.stats(command, data)
-            console.print(
-                self.__to_table(
-                    stats, plugin.title_stats(), plugin.header_stats()
-                )
+            stats_tab = self.__to_table(
+                stats, plugin.title_stats(), plugin.header_stats()
             )
-            console.print(
-                self.__to_table(
-                    errors, plugin.title_error(), plugin.header_error()
+
+            error_tab = self.__to_table(
+                errors, plugin.title_error(), plugin.header_error()
+            )
+            print(
+                Panel(
+                    Columns([stats_tab, error_tab]),
+                    title=command,
+                    highlight=True,
                 )
             )
 
     def __to_table(
         self, matrix_data: List[List], title: str, header: List[str]
     ) -> Table:
-        table = Table(title=title, box=box.MINIMAL)
+        table = Table(title=title, box=box.MINIMAL, expand=True)
         for ele in header:
             table.add_column(ele)
         for row in matrix_data:
