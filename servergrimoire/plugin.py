@@ -1,7 +1,8 @@
-from typing import List, Tuple
 import logging
-from rich.logging import RichHandler
+from typing import List, Tuple
+
 from rich.console import Console
+from rich.logging import RichHandler
 from rich.markdown import Markdown
 
 
@@ -11,7 +12,6 @@ class Plugin(object):
     """
 
     def __init__(self):
-
         FORMAT = "%(message)s"
         logging.basicConfig(
             level="NOTSET",

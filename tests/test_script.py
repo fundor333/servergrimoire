@@ -1,7 +1,9 @@
-from unittest.case import TestCase
-from servergrimoire.operation.sslverify import SSLVerify
 import logging
+from unittest.case import TestCase
+
 from rich.logging import RichHandler
+
+from servergrimoire.operation.sslverify import SSLVerify
 
 FORMAT = "%(message)s"
 logging.basicConfig(
