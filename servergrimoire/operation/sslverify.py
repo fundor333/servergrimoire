@@ -3,7 +3,6 @@ import socket
 import ssl
 from typing import Tuple
 
-from termcolor import colored
 from servergrimoire.plugin import Plugin
 
 
@@ -111,17 +110,11 @@ class SSLVerify(Plugin):
             other = {}
             if data[directive]["status"] == "KO":
                 other = {
-                    colored(data[directive]["domain"], "red"): colored(
-                        f"{data[directive]['expired']} - {data[directive]['organization_name']}",
-                        "red",
-                    )
+                    f"[red]{data[directive]['domain']}": f"[red]{data[directive]['expired']} - {data[directive]['organization_name']}"
                 }
             elif data[directive]["status"] == "XX":
                 other = {
-                    colored(data[directive]["domain"], "yellow"): colored(
-                        f"{data[directive]['expired']} - {data[directive]['organization_name']}",
-                        "yellow",
-                    )
+                    f"[yellow]{data[directive]['domain']}": f"[yellow]{data[directive]['expired']} - {data[directive]['organization_name']}"
                 }
             return stat, other
         except KeyError as e:
