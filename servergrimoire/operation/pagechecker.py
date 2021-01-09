@@ -1,12 +1,18 @@
-from typing import Tuple, List
+from typing import List, Tuple
 
 import requests
 import whois
-from requests.packages.urllib3.util import Retry
-from requests.adapters import HTTPAdapter
 from requests import Session
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util import Retry
 
 from servergrimoire.plugin import Plugin
+
+MARKDOWN = """
+# Page Checker
+
+Save the HTTP/HTTPS status of the url
+"""
 
 TIMEOUT = 5
 s = Session()
@@ -53,27 +59,57 @@ class PageChecker(Plugin):
         self.logger.info(output_strng)
         return output_strng
 
-    def stats(self, directive: str, data: dict) -> Tuple[dict, dict]:
-        stat: dict = {}
+    def stats(
+        self, directive: str, data: dict
+    ) -> Tuple[List[List], List[List]]:
+        stat_temp: dict = {}
+        other = []
         try:
-            stat[str(data[directive]["status"])] = 1
-            other = {}
-            if not (200 <= data[directive]["status"] < 300):
-                status = data[directive]["status"]
-                try:
-                    if 300 <= status < 400:
-                        color = "blue"
-                    elif 400 <= status < 500:
-                        color = "yellow"
-                    elif 500 <= status < 600:
-                        color = "red"
-                    else:
-                        color = "cyan"
-                    other = {
-                        f"[{color}]{data[directive]['url']}": f"[{color}]{data[directive]['status']}"
-                    }
-                except KeyError:
-                    other = {}
-            return stat, other
+            for key in data.keys():
+                data_filter = data[key][directive]
+                stat_temp[str(data_filter["status"])] = 1
+                if not (200 <= data_filter["status"] < 300):
+                    status = data_filter["status"]
+                    try:
+                        if 300 <= status < 400:
+                            color = "blue"
+                        elif 400 <= status < 500:
+                            color = "yellow"
+                        elif 500 <= status < 600:
+                            color = "red"
+                        else:
+                            color = "cyan"
+                        other.append(
+                            [
+                                f"[{color}]{data_filter['url']}",
+                                f"[{color}]{data_filter['status']}",
+                            ]
+                        )
+                    except KeyError:
+                        pass
+            stats = []
+            for key, value in stat_temp.items():
+                temp = [key, value]
+                stats.append(temp)
+
+            return stats, other
         except KeyError:
-            return {}, {}
+            return [], []
+
+    def header_stats(self) -> List[str]:
+        return ["Status", "Number"]
+
+    def header_error(self) -> List[str]:
+        return ["Url", "Status"]
+
+    def title_stats(self) -> str:
+        return "Page Checker Stats"
+
+    def title_error(self) -> str:
+        return "Page Checker Error"
+
+    def get_markdown(self):
+        """
+        Return info text as Markdown
+        """
+        return MARKDOWN

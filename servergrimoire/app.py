@@ -1,5 +1,4 @@
 import json
-from pprint import pprint
 from typing import List
 import logging
 from rich.logging import RichHandler
@@ -12,6 +11,7 @@ from servergrimoire.plugin import Plugin
 from rich.console import Console
 from rich.table import Table
 from rich.progress import Progress
+from rich import box
 
 console = Console()
 
@@ -97,7 +97,7 @@ class GrimoirePage:
             tasks = {}
             for command in command_to_run:
                 tasks[command] = progress.add_task(
-                    "[cyan]Working...", total=(len(url_to_run))
+                    f"[cyan]{command}", total=(len(url_to_run))
                 )
 
             for url in url_to_run:
@@ -125,47 +125,34 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
-        printable: dict = {}
-        printable_error: dict = {}
-
         for command in command_to_run:
-            printable[command] = {}
-            printable_error[command] = {}
-            for url in url_to_run:
-                all, errors = map_command[command]().stats(
-                    command, self.data["server"][url]
+            data = {
+                k: self.data["server"][k]
+                for k in self.data["server"].keys() & set(url_to_run)
+            }
+            plugin = map_command[command]()
+            stats, errors = plugin.stats(command, data)
+            console.print(
+                self.__to_table(
+                    stats, plugin.title_stats(), plugin.header_stats()
                 )
-                try:
-                    printable_error[command].update(errors)
-                except AttributeError:
-                    printable_error[command] = errors
-                for key in all.keys():
-                    printable[command][key] = printable[command].get(
-                        key, 0
-                    ) + int(all[key])
+            )
+            console.print(
+                self.__to_table(
+                    errors, plugin.title_error(), plugin.header_error()
+                )
+            )
 
-        for command in printable.keys():
-            message = [[k, v] for k, v in printable[command].items()]
-            try:
-                message_error = [
-                    [k, v] for k, v in printable_error[command].items()
-                ]
-            except AttributeError:
-                message_error = []
-            if len(message) > 0:
-                table = Table(show_footer=False)
-                table.add_column()
-                table.add_column()
-                for a, b in message:
-                    table.add_row(a, str(b))
-                console.print(table)
-            if len(message_error) > 0:
-                table = Table(show_footer=False)
-                table.add_column()
-                table.add_column()
-                for a, b in message_error:
-                    table.add_row(a, b)
-                console.print(table)
+    def __to_table(
+        self, matrix_data: List[List], title: str, header: List[str]
+    ) -> Table:
+        table = Table(title=title, box=box.MINIMAL)
+        for ele in header:
+            table.add_column(ele)
+        for row in matrix_data:
+            row = list(map(str, row))
+            table.add_row(*row)
+        return table
 
     def info(self, command=None, url=None) -> None:
         """
@@ -175,20 +162,8 @@ class GrimoirePage:
         map_command = self.__get_directives_and_class()
         if command is None:
             command = self.__get_directives_str()
-        if url is None:
-            url_to_run = self.__get_urls_all()
-        else:
-            url_to_run = [url]
-
-        printable: dict = {}
-        printable[command] = {}
-        for url in url_to_run:
-            all = map_command[command]().info(
-                directive=command, data=self.data["server"][url]
-            )
-            printable[command][url] = all
-
-        pprint(printable)
+        for c in command:
+            map_command[c]().info()
 
     def add(self, url) -> bool:
         """
