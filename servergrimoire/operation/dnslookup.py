@@ -1,6 +1,14 @@
+from typing import List, Tuple
+
 import dns.resolver
 
 from servergrimoire.plugin import Plugin
+
+MARKDOWN = """
+# DNSL Lookup
+
+Save the DNSL lookup of the domain
+"""
 
 
 class DNSLookup(Plugin):
@@ -31,11 +39,37 @@ class DNSLookup(Plugin):
                 self.logger.info(f"Not found {label} for {domain}")
         return output
 
-    def stats(self, directive: str, data: dict) -> ({str: int}, {str: str}):
-        stats = {}
-        self.logger.debug(data[directive])
-        for e in data[directive]:
-            stats[e] = len(data[directive][e])
-        other = {}
-        self.logger.debug(stats)
-        return stats, other
+    def stats(
+        self, directive: str, data: dict
+    ) -> Tuple[List[List], List[List]]:
+        stats = {"MX": 0, "NS": 0, "TXT": 0, "A": 0}
+        for key in data.keys():
+            data_filter = data[key][directive]
+            self.logger.debug(data_filter)
+            for e in data_filter:
+                stats[e] += len(data_filter[e])
+            self.logger.debug(stats)
+        return [
+            ["MX", stats["MX"]],
+            ["NS", stats["NS"]],
+            ["TXT", stats["TXT"]],
+            ["A", stats["A"]],
+        ], []
+
+    def header_stats(self) -> List[str]:
+        return ["Type", "Number"]
+
+    def header_error(self) -> List[str]:
+        return ["Type", "Number"]
+
+    def title_stats(self) -> str:
+        return "DNS Lookup Stats"
+
+    def title_error(self) -> str:
+        return "DNS Lookup Error"
+
+    def get_markdown(self):
+        """
+        Return info text as Markdown
+        """
+        return MARKDOWN

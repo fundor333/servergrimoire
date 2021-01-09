@@ -1,9 +1,15 @@
 import datetime
 import socket
 import ssl
-from typing import Tuple
+from typing import Tuple, List
 
 from servergrimoire.plugin import Plugin
+
+MARKDOWN = """
+# SSL Verify
+
+Plugin for get some info of the SSL certificate of a domain
+"""
 
 
 def broken_response(url) -> {str, str, str}:
@@ -103,20 +109,57 @@ class SSLVerify(Plugin):
         self.logger.info(f"{directive} return {output_strng}")
         return output_strng
 
-    def stats(self, directive: str, data: dict) -> Tuple[dict, dict]:
+    def stats(
+        self, directive: str, data: dict
+    ) -> Tuple[List[List], List[List]]:
         try:
             stat = {"OK": 0, "KO": 0, "XX": 0}
-            stat[data[directive]["status"]] = 1
-            other = {}
-            if data[directive]["status"] == "KO":
-                other = {
-                    f"[red]{data[directive]['domain']}": f"[red]{data[directive]['expired']} - {data[directive]['organization_name']}"
-                }
-            elif data[directive]["status"] == "XX":
-                other = {
-                    f"[yellow]{data[directive]['domain']}": f"[yellow]{data[directive]['expired']} - {data[directive]['organization_name']}"
-                }
-            return stat, other
+            other = []
+            for key in data.keys():
+                data_filter = data[key][directive]
+                stat[data_filter["status"]] = 1
+                if data_filter["status"] == "KO":
+                    other.append(
+                        [
+                            f"[red]{data_filter['domain']}",
+                            f"[red]{data_filter['expired']} ",
+                            f"[red]{data_filter['organization_name']}",
+                        ]
+                    )
+                elif data_filter["status"] == "XX":
+                    other.append(
+                        [
+                            f"[yellow]{data_filter['domain']}",
+                            f"[yellow]{data_filter['expired']}",
+                            f"[yellow]{data_filter['organization_name']}",
+                        ]
+                    )
+            return (
+                [
+                    ["OK", stat["OK"]],
+                    ["KO", stat["KO"]],
+                    ["XX", stat["XX"]],
+                ],
+                other,
+            )
         except KeyError as e:
             self.logger.error(str(e))
-            return {}, {}
+            return [], []
+
+    def header_stats(self) -> List[str]:
+        return ["Status", "Number"]
+
+    def header_error(self) -> List[str]:
+        return ["Url", "Date", "Authority"]
+
+    def title_stats(self) -> str:
+        return "SSL Verify Status"
+
+    def title_error(self) -> str:
+        return "SSL Verify Error"
+
+    def get_markdown(self):
+        """
+        Return info text as Markdown
+        """
+        return MARKDOWN
