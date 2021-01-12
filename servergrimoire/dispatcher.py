@@ -47,9 +47,10 @@ def run(ctx, c, u, stats):
     help="Stats to return. If not insert launch all the commands",
 )
 @click.option("--u", "-url", help="On which url return the stats")
+@click.option("--s", "-short", is_flag=True, help="Short version of the stats")
 @click.pass_context
-def stats(ctx, c, u):
-    ctx.obj.stats(c, u)
+def stats(ctx, c, u, s):
+    ctx.obj.stats(c, u, s)
 
 
 @grimoire.command(help="Show the info")
