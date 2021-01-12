@@ -114,7 +114,7 @@ class GrimoirePage:
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
 
-    def stats(self, command=None, url=None) -> None:
+    def stats(self, command=None, url=None, short=False) -> None:
         """
         Launch stats command for plugin
         """
@@ -128,6 +128,25 @@ class GrimoirePage:
         else:
             url_to_run = [url]
 
+        if short:
+            commands = []
+            for command in command_to_run:
+                data = {
+                    k: self.data["server"][k]
+                    for k in self.data["server"].keys() & set(url_to_run)
+                }
+                plugin = map_command[command]()
+                _, errors = plugin.stats(command, data)
+                commands.append(len(errors))
+            stats_tab = self.__to_table(
+                zip(command_to_run, commands),
+                "ServerGrimoire",
+                ["Command", "# Error"],
+            )
+            stats_tab.box = box.SIMPLE
+            print(stats_tab)
+
+            return
         for command in command_to_run:
             data = {
                 k: self.data["server"][k]
