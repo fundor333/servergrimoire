@@ -51,10 +51,10 @@ class DNSLookup(Plugin):
             self.logger.debug(stats)
         return (
             [
-                ["A", sorted(stats["A"])],
-                ["MX", sorted(stats["MX"])],
-                ["NS", sorted(stats["NS"])],
-                ["TXT", sorted(stats["TXT"])],
+                ["A", stats["A"]],
+                ["MX", stats["MX"]],
+                ["NS", stats["NS"]],
+                ["TXT", stats["TXT"]],
             ],
             [],
         )
