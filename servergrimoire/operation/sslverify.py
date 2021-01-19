@@ -117,7 +117,7 @@ class SSLVerify(Plugin):
             other = []
             for key in data.keys():
                 data_filter = data[key][directive]
-                stat[data_filter["status"]] = 1
+                stat[data_filter["status"]] += 1
                 if data_filter["status"] == "KO":
                     other.append(
                         [
