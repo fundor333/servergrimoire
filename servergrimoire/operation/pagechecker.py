@@ -67,7 +67,9 @@ class PageChecker(Plugin):
         try:
             for key in data.keys():
                 data_filter = data[key][directive]
-                stat_temp[str(data_filter["status"])] += 1
+                stat_temp[str(data_filter["status"])] = (
+                    stat_temp.get(str(data_filter["status"]), 0) + 1
+                )
                 if not (200 <= data_filter["status"] < 300):
                     status = data_filter["status"]
                     try:
