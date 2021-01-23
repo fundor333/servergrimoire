@@ -49,12 +49,15 @@ class DNSLookup(Plugin):
             for e in data_filter:
                 stats[e] += len(data_filter[e])
             self.logger.debug(stats)
-        return [
-            ["MX", stats["MX"]],
-            ["NS", stats["NS"]],
-            ["TXT", stats["TXT"]],
-            ["A", stats["A"]],
-        ], []
+        return (
+            [
+                ["A", stats["A"]],
+                ["MX", stats["MX"]],
+                ["NS", stats["NS"]],
+                ["TXT", stats["TXT"]],
+            ],
+            [],
+        )
 
     def header_stats(self) -> List[str]:
         return ["Type", "Number"]
