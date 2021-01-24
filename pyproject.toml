@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "servergrimoire"
-version = "1.7.10"
+version = "1.7.11"
 description = "Package for record and store info about servers and their stuffs"
 authors = ["Fundor333 <fundor333@fundor333.com>"]
 
-homepage = "https://github.com/fundor333/servergrimoire"
+homepage = "https://fundor333.com/servergrimoire/"
 repository = "https://github.com/fundor333/servergrimoire"
 license = "MIT"
 readme = "README.md"
