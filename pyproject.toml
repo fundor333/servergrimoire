@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "servergrimoire"
-version = "1.7.9"
+version = "1.7.10"
 description = "Package for record and store info about servers and their stuffs"
 authors = ["Fundor333 <fundor333@fundor333.com>"]
 
@@ -35,6 +35,8 @@ black = { version = "20.8b1", allow-prereleases = true, python = "^3.8", markers
 mypy = "^0.790"
 mkdocs = "^1.1.2"
 mkdocs-material = "^6.2.4"
+pymdown-extensions = "^8.1"
+diagrams = "^0.18.0"
 
 [tool.poetry.plugins] # Optional super table
 
