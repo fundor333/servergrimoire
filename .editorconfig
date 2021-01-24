@@ -45,3 +45,7 @@ max_line_length = 79
 
 [makefile]
 indent_style = tab
+
+[*{yml,yaml}]
+indent_size = 4
+indent_style = space

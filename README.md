@@ -27,7 +27,7 @@ Y88b  d88P 888     888 888  888  888 Y88..88P 888 888    Y8b.
 ![PyPI - Status](https://img.shields.io/pypi/status/servergrimoire)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/servergrimoire)
 
-This module gives you some command to check URLs, domains and other things in an automatied way.
+This module gives you some command to check URLs, domains, dns rocords and other things in an automatied way.
 
 All config and data are saved as dotfiles in your home directory and it works on Windows, Mac, and Linux systems granted
 you have Python installed.

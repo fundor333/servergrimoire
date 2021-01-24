@@ -1,17 +1,20 @@
-# Welcome to MkDocs
+# Server Grimoire
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Server grimoire is a python terminal app for checking Urls, Domains, DNS records and other things in an automated way.
 
-## Commands
+For now we only have four command but we are thinking of adding more.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## Command
 
-## Project layout
+This is a partial table of commands. For the complete one we suggest you to launch the --help command
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+|        Task           | Option   | Explanation                              |
+|:---------------------:|----------|------------------------------------------|
+| servergrimoire        | --help   | Print the help of the program            |
+| servergrimoire run    | --u, --c | Run the command for the url described    |
+| servergrimoire add    | --u      | Add the URL into the file for running    |
+| servergrimoire remove | --u      | Remove the url from the file for running |
+| servergrimoire stats  | --u,--c  | Print the stats of the last run made     |
+| servergrimoire info   | --u,--c  | Print the info of all the command        |
+
+Unless using --c with an operation, all the command launch the taks with/on all the operation
