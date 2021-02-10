@@ -2,7 +2,7 @@ import datetime
 import socket
 import ssl
 from typing import Tuple, List
-
+import urllib.parse
 from servergrimoire.plugin import Plugin
 
 MARKDOWN = """
@@ -30,9 +30,12 @@ class SSLVerify(Plugin):
         return ["ssl_check"]
 
     def __ssl_valid_time_remaining(
-        self, hostname: str
+        self, url_complete: str
     ) -> Tuple[datetime.datetime, str]:
         ssl_date_fmt = r"%b %d %H:%M:%S %Y %Z"
+
+        parsed_url = urllib.parse.urlparse(url_complete)
+        hostname = parsed_url.netloc
 
         context = ssl.create_default_context()
         conn = context.wrap_socket(
