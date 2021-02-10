@@ -36,24 +36,33 @@ class DNSChecker(Plugin):
             else:
                 expiration_date = w.expiration_date
 
-            flag = expiration_date >= (
-                datetime.datetime.now() - datetime.timedelta(days=30)
-            )
-
-            self.logger.info(flag)
-
-            if flag:
-                output_strng = {
-                    "status": "OK",
-                    "creation": f"{expiration_date}",
-                    "expiration": f"{w.expiration_date}",
-                }
-            else:
+            if expiration_date is None:
                 output_strng = {
                     "status": "XX",
-                    "creation": f"{expiration_date}",
-                    "expiration": f"{w.expiration_date}",
+                    "creation": "Error trying to connect to socket",
+                    "expiration": "Error trying to connect to socket",
                 }
+
+            else:
+
+                flag = expiration_date >= (
+                    datetime.datetime.now() - datetime.timedelta(days=30)
+                )
+
+                self.logger.info(flag)
+
+                if flag:
+                    output_strng = {
+                        "status": "OK",
+                        "creation": f"{expiration_date}",
+                        "expiration": f"{w.expiration_date}",
+                    }
+                else:
+                    output_strng = {
+                        "status": "XX",
+                        "creation": f"{expiration_date}",
+                        "expiration": f"{w.expiration_date}",
+                    }
 
         self.logger.info(output_strng)
         return output_strng
