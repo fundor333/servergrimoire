@@ -35,10 +35,7 @@ class SSLVerify(Plugin):
         ssl_date_fmt = r"%b %d %H:%M:%S %Y %Z"
 
         parsed_url = urllib.parse.urlparse(url_complete)
-        if parsed_url.netloc == "":
-            hostname = url_complete
-        else:
-            hostname = parsed_url.netloc
+        hostname = parsed_url.netloc
 
         context = ssl.create_default_context()
         conn = context.wrap_socket(
@@ -67,6 +64,9 @@ class SSLVerify(Plugin):
         limit = datetime.datetime.now() + datetime.timedelta(days=30)
         output_strng = None
         url = data["url"]
+        if "http" not in url:
+            url = f"https://{url}"
+            data["url"] = url
         try:
             will_expire_in, organizzator = self.__ssl_valid_time_remaining(url)
         except ResourceWarning:
