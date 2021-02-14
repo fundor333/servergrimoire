@@ -75,6 +75,12 @@ def remove(ctx, u):
     ctx.obj.remove(u)
 
 
+@grimoire.command(help="Update the data")
+@click.pass_context
+def updatedata(ctx):
+    ctx.obj.update_data()
+
+
 @grimoire.command(help="Show the hello message")
 def hello():
     print(
