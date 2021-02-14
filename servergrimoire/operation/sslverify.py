@@ -35,7 +35,10 @@ class SSLVerify(Plugin):
         ssl_date_fmt = r"%b %d %H:%M:%S %Y %Z"
 
         parsed_url = urllib.parse.urlparse(url_complete)
-        hostname = parsed_url.netloc
+        if parsed_url.netloc == "":
+            hostname = url_complete
+        else:
+            hostname = parsed_url.netloc
 
         context = ssl.create_default_context()
         conn = context.wrap_socket(

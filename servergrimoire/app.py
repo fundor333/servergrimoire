@@ -196,11 +196,13 @@ class GrimoirePage:
         Add command for url
         """
         for e in url:
+            if "http" not in e:
+                e = f"http://{e}"
             if self.data.get("server") is None:
                 self.data["server"] = {}
             if self.data["server"].get(e) is None:
                 self.data["server"][e] = {"url": e}
-                self.logger.info(f"Adding {url}")
+                self.logger.info(f"Adding {e}")
         with open(self.setting_manager.data_path, "w") as json_file:
             json.dump(self.data, json_file)
         return True
