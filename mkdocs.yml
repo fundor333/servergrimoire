@@ -16,30 +16,30 @@ markdown_extensions:
     - codehilite
     - footnotes
     - pymdownx.arithmatex
-    - pymdownx.betterem:
-          smart_enable: all
+    -   pymdownx.betterem:
+            smart_enable: all
     - pymdownx.caret
     - pymdownx.critic
     - pymdownx.details
-    - pymdownx.highlight:
-          use_pygments: true
-          linenums: true
-          linenums_style: pymdownx.inline
+    -   pymdownx.highlight:
+            use_pygments: true
+            linenums: true
+            linenums_style: pymdownx.inline
     - pymdownx.inlinehilite
     - pymdownx.magiclink
     - pymdownx.mark
     - pymdownx.smartsymbols
     - pymdownx.superfences
     - pymdownx.tabbed
-    - pymdownx.tasklist:
-          custom_checkbox: true
+    -   pymdownx.tasklist:
+            custom_checkbox: true
     - pymdownx.tilde
     - sane_lists
     - smarty
-    - toc:
-          permalink: True
+    -   toc:
+            permalink: True
 
 nav:
-    - ServerGrimoire: index.md
-    - Operation: operation.md
-    - License: license.md
+    -   ServerGrimoire: index.md
+    -   Operation: operation.md
+    -   License: license.md

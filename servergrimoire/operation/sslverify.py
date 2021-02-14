@@ -1,8 +1,9 @@
 import datetime
 import socket
 import ssl
-from typing import Tuple, List
 import urllib.parse
+from typing import Tuple, List
+
 from servergrimoire.plugin import Plugin
 
 MARKDOWN = """

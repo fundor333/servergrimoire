@@ -216,3 +216,18 @@ class GrimoirePage:
             json.dump(self.data, json_file)
         self.logger.info(f"Removing {url}")
         return True
+
+    def update_data(self) -> bool:
+        """
+        Update all the data
+        """
+        temp = {}
+        for url in self.data["server"]:
+            if "http" not in url:
+                url = f"https://{url}"
+            temp[url] = {"url": url}
+            self.logger.info(f"Adding {url}")
+        self.data["server"] = temp
+        with open(self.setting_manager.data_path, "w") as json_file:
+            json.dump(self.data, json_file)
+        return True
