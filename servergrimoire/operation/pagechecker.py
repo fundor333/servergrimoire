@@ -34,18 +34,12 @@ class PageChecker(Plugin):
         w = whois.whois(data["url"])
         try:
             try:
-                if "https" not in data["url"] or "http" not in data["url"]:
-                    url = f"https://{data['url']}"
-                else:
-                    url = data["url"]
+                url = data["url"]
                 status_code = s.head(
                     url, allow_redirects=True, timeout=TIMEOUT
                 ).status_code
             except requests.exceptions.SSLError:
-                url = f"http://{data['url']}"
-                status_code = s.head(
-                    url, allow_redirects=True, timeout=TIMEOUT
-                ).status_code
+                status_code = 0
             self.logger.info(w)
         except requests.exceptions.ConnectTimeout:
             status_code = 408
