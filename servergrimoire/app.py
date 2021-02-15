@@ -196,7 +196,7 @@ class GrimoirePage:
         Add command for url
         """
         for e in url:
-            if "http" not in e:
+            if "http" not in e or "https" not in e:
                 e = f"https://{e}"
             if self.data.get("server") is None:
                 self.data["server"] = {}

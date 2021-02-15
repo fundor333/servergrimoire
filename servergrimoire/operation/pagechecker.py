@@ -34,7 +34,7 @@ class PageChecker(Plugin):
         w = whois.whois(data["url"])
         try:
             try:
-                if "https" not in data["url"]:
+                if "https" not in data["url"] or "http" not in data["url"]:
                     url = f"https://{data['url']}"
                 else:
                     url = data["url"]
