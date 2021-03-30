@@ -24,5 +24,7 @@ docs:  ## Previewing as you write documentation
 html: docs## Serve the docs
 	poetry run mkdocs serve
 
-publish: test docs ## Testing and publish the paackage
+prepublish: test docs ## Code for the prepublish
+
+publish: prepublish ## Testing and publish the paackage
 	poetry publish --build
