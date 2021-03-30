@@ -44,7 +44,7 @@ class SSLVerify(Plugin):
             server_hostname=hostname,
         )
 
-        self.logger.debug("Connect to {}".format(hostname))
+        self.logger.debug(f"Connect to {hostname}")
         conn.connect((hostname, 443))
         ssl_info = conn.getpeercert()
         # parse the string from the certificate into a Python datetime object

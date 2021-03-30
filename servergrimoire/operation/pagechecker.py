@@ -13,7 +13,6 @@ MARKDOWN = """
 
 Save the HTTP/HTTPS status of the url
 """
-
 TIMEOUT = 5
 s = Session()
 retries = Retry(total=3, backoff_factor=0)

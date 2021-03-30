@@ -6,7 +6,7 @@ from rich.logging import RichHandler
 from rich.markdown import Markdown
 
 
-class Plugin(object):
+class Plugin:
     """
     Abstract base class for commands that process directives.
     """
