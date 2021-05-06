@@ -12,7 +12,6 @@ from rich.table import Table
 from servergrimoire.configmanager import ConfigManager
 from servergrimoire.operation.dnschecker import DNSChecker
 from servergrimoire.operation.dnslookup import DNSLookup
-from servergrimoire.operation.pagechecker import PageChecker
 from servergrimoire.operation.sslverify import SSLVerify
 from servergrimoire.plugin import Plugin
 
@@ -58,7 +57,7 @@ class GrimoirePage:
         return self.__get_directives_class().keys()
 
     def __get_directives_class(self) -> List[Plugin]:
-        directive = [DNSChecker, DNSLookup, SSLVerify, PageChecker]
+        directive = [DNSChecker, DNSLookup, SSLVerify]
         # TODO Add reader from folder
         return directive
 
